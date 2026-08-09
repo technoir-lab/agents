@@ -1,0 +1,4 @@
+interface:
+  display_name: "Developing Gradle Plugins"
+  short_description: "Develop, test, review, and refactor Gradle plugins in Kotlin"
+  default_prompt: "Use $developing-gradle-plugins to design or implement a Gradle plugin in Kotlin."
