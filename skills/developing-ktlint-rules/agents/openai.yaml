@@ -1,0 +1,4 @@
+interface:
+  display_name: "Developing KtLint Rules"
+  short_description: "Develop, test, and review KtLint rules"
+  default_prompt: "Use $developing-ktlint-rules to implement or review a KtLint rule."
