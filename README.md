@@ -3,4 +3,7 @@ Agent Skills
 
 Agent skills for Technoir Lab's projects.
 
-- [developing-gradle-plugins](developing-gradle-plugins/SKILL.md)
+Skills
+------
+
+- [developing-gradle-plugins](skills/developing-gradle-plugins/SKILL.md)

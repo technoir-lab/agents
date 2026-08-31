@@ -2,10 +2,10 @@
 
 ## Scope
 
-- One directory per skill.
-- `SKILL.md`: frontmatter, trigger description, workflow, reference index, complete source-documentation list.
-- `references/`: focused topic pages.
-- `agents/openai.yaml`: display name, short description, default prompt.
+- `skills/`: one directory per skill.
+- `skills/<skill>/SKILL.md`: frontmatter, trigger description, workflow, reference index, complete source-documentation list.
+- `skills/<skill>/references/`: focused topic pages.
+- `skills/<skill>/agents/openai.yaml`: display name, short description, default prompt.
 - `README.md`: skill index.
 
 ## Authoring
