@@ -44,13 +44,14 @@ gradlePlugin {
 
 Register every published plugin ID. Keep the ID, implementation class, display name, and description stable.
 
-## Depending on other plugins
+## Plugin dependencies
 
 | Relationship | Dependency | Application |
 |---|---|---|
-| Required plugin | `compileOnly` its public API artifact | React with `pluginManager.withPlugin(id)`; fail after evaluation when absent |
-| Optional plugin support | `compileOnly` its public API artifact | React with `pluginManager.withPlugin(id)` |
-| No stable plugin ID | `compileOnly` its public API artifact | Use `plugins.withType(...).configureEach` |
+| Distributed plugin with implementation types in use | `implementation` | Apply by class or ID |
+| Distributed plugin without implementation types in use | `runtimeOnly` | Apply by ID |
+| Consumer-supplied required plugin | `compileOnly` its public or compile artifact | React with `pluginManager.withPlugin(id)`; fail after evaluation when absent |
+| Consumer-supplied optional plugin | `compileOnly` its public or compile artifact | React with `pluginManager.withPlugin(id)` |
 
 ```kotlin
 internal class ExamplePlugin : Plugin<Project> {
@@ -91,8 +92,8 @@ private fun Project.whenPluginApplied(id: String, action: () -> Unit) {
 
 - Prefer `com.android.tools.build:gradle-api` for Android Gradle Plugin API types.
 - Prefer `org.jetbrains.kotlin:kotlin-gradle-plugin-api` for Kotlin Gradle Plugin API types.
-- Require the consuming build to supply the matching plugin implementation.
-- Keep `compileOnly` provider-plugin types out of the plugin's public API.
+- Do not apply a consumer-supplied plugin from the production plugin; require the consuming build to supply and apply the matching implementation.
+- Keep types from `compileOnly` plugin dependencies out of the plugin's public API.
 - Never depend on `.internal.`, `Internal`, or `Impl` types.
 
 ## Common mistakes
@@ -101,7 +102,7 @@ private fun Project.whenPluginApplied(id: String, action: () -> Unit) {
 |---|---|
 | Assuming plugin application order | Use `withPlugin`; configure inside its callback |
 | Silently ignoring a missing required plugin | Fail during final validation |
-| Bundling another plugin implementation unintentionally | Use `compileOnly` for its API |
+| Bundling a consumer-supplied plugin implementation | Use `compileOnly` for its public or compile artifact |
 | Implementing a published plugin in a build script | Move it to the standalone plugin source set |
 | Omitting marker registration | Register the plugin under `gradlePlugin.plugins` |
 
@@ -114,7 +115,7 @@ private fun Project.whenPluginApplied(id: String, action: () -> Unit) {
 - [General best practices](https://docs.gradle.org/current/userguide/best_practices_general.html)
 - [Dependency configurations](https://docs.gradle.org/current/userguide/dependency_configurations.html)
 
-## Provider-plugin documentation
+## Documentation for common plugin dependencies
 
 - [Android Gradle Plugin public APIs](https://developer.android.com/build/extend-agp)
 - [Kotlin Gradle Plugin API](https://kotlinlang.org/api/kotlin-gradle-plugin/kotlin-gradle-plugin-api/)

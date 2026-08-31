@@ -6,11 +6,9 @@ Use two kinds of tests: unit and functional.
 
 | Kind | Subtype | Tooling | Boundary |
 |---|---|---|---|
-| Unit | Pure unit | Kotlin/JVM + JUnit 5 | Standard types; stub Gradle-managed interfaces |
-| Unit | Gradle model | `ProjectBuilder` + JUnit 5 | Apply plugins, create managed types, inspect configuration; do not execute tasks |
-| Functional | Real build | TestKit `GradleRunner` + JUnit 5 | Execute builds, tasks, plugin application, and dependency resolution |
-
-Use vanilla JUnit 5 assertions. Do not add mocking or assertion libraries.
+| Unit | Pure unit | Kotlin/JVM + JUnit 6 | Standard types; stub Gradle-managed interfaces |
+| Unit | Gradle model | `ProjectBuilder` + JUnit 6 | Apply plugins, create managed types, inspect configuration; do not execute tasks |
+| Functional | Real build | TestKit `GradleRunner` + JUnit 6 | Execute builds, tasks, plugin application, and dependency resolution |
 
 ## Unit-testable design
 
@@ -19,6 +17,7 @@ Use vanilla JUnit 5 assertions. Do not add mocking or assertion libraries.
 - Stub small Gradle-managed interfaces only at the pure boundary.
 - Use `ProjectBuilder` when Gradle must create the managed object or model.
 - Do not attempt task execution with `ProjectBuilder`.
+- Pair a consumer-supplied plugin's `compileOnly` dependency with a matching `testRuntimeOnly` or `testImplementation` dependency when a unit or model test applies or inspects that plugin.
 
 ```kotlin
 internal class ExampleBuildLogic {
@@ -90,7 +89,10 @@ Pass the script to `GradleRunner` with `--init-script`; do not use `pluginManage
 
 - Plugin marker resolution from `mavenLocal()`
 - Project, Settings, and init plugin application
+- Plugin dependency application order
 - Task execution, CLI options, failures, outputs, and dependency resolution
+- Repeated-build state and input invalidation boundaries
+- Task cacheability and Build Cache relocation across project directories
 - Global settings defaults and per-project overrides
 - Variant-aware producer/consumer artifacts
 - Shared service reuse and `close()` behavior
@@ -98,6 +100,7 @@ Pass the script to `GradleRunner` with `--init-script`; do not use `pluginManage
 - Isolated Projects with multiple projects
 - Parallel task execution and worker isolation
 - Missing inputs, invalid DSL, and structured problems
+- Host-specific behavior guarded with JUnit assumptions
 
 ## Common mistakes
 
@@ -110,8 +113,9 @@ Pass the script to `GradleRunner` with `--init-script`; do not use `pluginManage
 
 ## References
 
+- [JUnit 6 User Guide](https://docs.junit.org/current/user-guide/)
 - [Testing plugins](https://docs.gradle.org/current/userguide/testing_gradle_plugins.html)
 - [Gradle TestKit](https://docs.gradle.org/current/userguide/test_kit.html)
-- [Preparing plugins for publication](https://docs.gradle.org/current/userguide/preparing_to_publish.html)
 - [Testing best practices](https://docs.gradle.org/current/userguide/best_practices_testing.html)
+- [Build Cache](https://docs.gradle.org/current/userguide/build_cache.html)
 - [ProjectBuilder API](https://docs.gradle.org/current/javadoc/org/gradle/testfixtures/ProjectBuilder.html)
