@@ -1,9 +1,9 @@
 ---
-name: kotlin-code-style
-description: Apply Technoir Lab Kotlin code style when creating or editing Kotlin source files (.kt) or Kotlin scripts (.kts) in Technoir Lab projects.
+name: kotlin-coding-conventions
+description: Apply Technoir Lab Kotlin coding conventions when creating or editing Kotlin source files (.kt) or Kotlin scripts (.kts) in Technoir Lab projects.
 ---
 
-# Kotlin Code Style
+# Kotlin Coding Conventions
 
 ## Baseline
 

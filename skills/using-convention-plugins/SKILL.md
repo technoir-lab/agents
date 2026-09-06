@@ -48,5 +48,5 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 
 - [Convention plugins EditorConfig](https://github.com/technoir-lab/convention-plugins/blob/main/.editorconfig)
 - [Tech stack library references](references/tech-stack.md#references)
-- [Kotlin code style: Platform tag conventions](../kotlin-code-style/SKILL.md#platform-tags)
+- [Kotlin coding conventions: Platform tag conventions](../kotlin-coding-conventions/SKILL.md#platform-tags)
 - [Technoir Lab convention plugins repository](https://github.com/technoir-lab/convention-plugins)

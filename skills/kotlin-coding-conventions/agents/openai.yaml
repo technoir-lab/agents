@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kotlin Coding Conventions"
+  short_description: "Apply Technoir Lab Kotlin coding conventions"
+  default_prompt: "Use $kotlin-coding-conventions when creating or editing Kotlin files in Technoir Lab projects."

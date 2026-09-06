@@ -1,4 +1,0 @@
-interface:
-  display_name: "Kotlin Code Style"
-  short_description: "Apply Technoir Lab Kotlin code style"
-  default_prompt: "Use $kotlin-code-style when creating or editing Kotlin files in Technoir Lab projects."

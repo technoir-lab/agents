@@ -15,7 +15,7 @@ description: Use when creating, reviewing, testing, or refactoring Gradle plugin
 ## Workflow
 
 1. Identify the plugin target and supported public surface.
-2. Read every page relevant to the change; for Technoir Lab projects, apply the [Kotlin code style skill](../kotlin-code-style/SKILL.md), and the [Using convention plugins skill](../using-convention-plugins/SKILL.md) for build setup, dependencies, testing, and publishing.
+2. Read every page relevant to the change; for Technoir Lab projects, apply the [Kotlin coding conventions skill](../kotlin-coding-conventions/SKILL.md), and the [Using convention plugins skill](../using-convention-plugins/SKILL.md) for build setup, dependencies, testing, and publishing.
 3. Design providers and configuration roles before registering tasks.
 4. Keep project configuration isolated.
 5. Choose the smallest execution primitive that fits.

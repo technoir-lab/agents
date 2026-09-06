@@ -17,7 +17,7 @@ description: Use when implementing, modifying, reviewing, or unit testing custom
 
 1. Read [repository conventions](references/conventions.md) when they apply and select the correct rules library.
 2. Inspect the existing rule, `RuleSetProviderV3`, service descriptor, tests, and Gradle wiring; create missing library wiring only for an explicitly requested new local rule set.
-3. Read only the pages relevant to the requested change; for Technoir Lab projects, apply the [Kotlin code style skill](../kotlin-code-style/SKILL.md).
+3. Read only the pages relevant to the requested change; for Technoir Lab projects, apply the [Kotlin coding conventions skill](../kotlin-coding-conventions/SKILL.md).
 4. Implement the rule contract, configuration, marker interfaces, and auto-correction together.
 5. Add the rule to its provider; create or register a provider only for a new rule set.
 6. Unit test lint findings, formatting, configuration branches, provider completeness, and service discovery.
