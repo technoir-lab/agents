@@ -118,7 +118,22 @@ class TextNormalizerTest {
 ## Use AssertJ Core assertions
 
 - Use AssertJ Core for test assertions.
+- When asserting a return value, invoke the method under test in the Act phase and store its result in a local `val`; pass that value to `assertThat` in the Assert phase instead of invoking the method inside `assertThat`.
 - Only when catching and verifying an exception thrown by a suspend function, use JUnit's Kotlin `org.junit.jupiter.api.assertThrows` instead of `org.assertj.core.api.Assertions.assertThatThrownBy`.
+
+### Incorrect
+
+```kotlin
+assertThat(normalizer.normalize(" text ")).isEqualTo("text")
+```
+
+### Correct
+
+```kotlin
+val result = normalizer.normalize(" text ")
+
+assertThat(result).isEqualTo("text")
+```
 
 ### Correct
 
@@ -192,7 +207,7 @@ private fun assertOutput(file: Path) {
 
 ```kotlin
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -201,7 +216,7 @@ class TextNormalizerTest {
     private val rules = StubNormalizationRules()
     private val normalizer = TextNormalizer(rules)
 
-    @Tag("text")
+    @Disabled("Pending implementation")
     @Test
     fun `normalize preserves whitespace between words`() {
         val text = " first  second "
@@ -225,7 +240,7 @@ class TextNormalizerTest {
 
 ```kotlin
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -235,7 +250,7 @@ class TextNormalizerTest {
     private val normalizer = TextNormalizer(rules)
 
     @Test
-    @Tag("text")
+    @Disabled("Pending implementation")
     fun `normalize preserves whitespace between words`() {
         val text = " first  second "
 

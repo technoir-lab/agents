@@ -86,11 +86,11 @@ data class SearchResult(val matches: List<String>)
 
 ```kotlin
 class TextBuffer(input: String) {
-    private val text: String = input
+    private val text = input
 
-    internal val isEmpty: Boolean = text.isEmpty()
+    internal val isEmpty = text.isEmpty()
 
-    val length: Int = text.length
+    val length = text.length
 
     init {
         require(length <= MAX_LENGTH) { "Text exceeds maximum length" }
@@ -108,22 +108,25 @@ class TextBuffer(input: String) {
     internal class State(val text: String)
 
     private companion object {
-        private const val MAX_LENGTH: Int = 80
+        private const val MAX_LENGTH = 80
     }
 }
 ```
 
 ### Keep class-associated constants in the companion object
 
-- Declare constants conceptually associated with a class or used primarily by that class inside its companion object, rather than at file top level.
+- Declare constants related to a class or used primarily by it inside that class's companion object.
+- Apply this placement rule to both `const val` and `val` constants named in `UPPER_SNAKE_CASE`.
+- Declare top-level constants only when they have no related class, including constants associated with top-level functions.
 
 #### Incorrect
 
 ```kotlin
-private const val MAX_LENGTH: Int = 80
+private const val MAX_LENGTH = 80
+private val DEFAULT_TEXT = "Untitled".uppercase()
 
 class TextPreview {
-    fun format(text: String): String = text.take(MAX_LENGTH)
+    fun format(text: String): String = text.ifBlank { DEFAULT_TEXT }.take(MAX_LENGTH)
 }
 ```
 
@@ -131,12 +134,22 @@ class TextPreview {
 
 ```kotlin
 class TextPreview {
-    fun format(text: String): String = text.take(MAX_LENGTH)
+    fun format(text: String): String = text.ifBlank { DEFAULT_TEXT }.take(MAX_LENGTH)
 
     private companion object {
-        private const val MAX_LENGTH: Int = 80
+        private const val MAX_LENGTH = 80
+        private val DEFAULT_TEXT = "Untitled".uppercase()
     }
 }
+```
+
+#### Allowed
+
+```kotlin
+private const val MAX_LENGTH = 80
+private val DEFAULT_TEXT = "Untitled".uppercase()
+
+fun formatPreview(text: String): String = text.ifBlank { DEFAULT_TEXT }.take(MAX_LENGTH)
 ```
 
 ## API surface and visibility
@@ -177,7 +190,7 @@ class TextPreview {
     fun format(text: String): String = text.take(MAX_LENGTH)
 
     companion object {
-        const val MAX_LENGTH: Int = 80
+        const val MAX_LENGTH = 80
     }
 }
 ```
@@ -189,7 +202,7 @@ class TextPreview {
     fun format(text: String): String = text.take(MAX_LENGTH)
 
     private companion object {
-        private const val MAX_LENGTH: Int = 80
+        private const val MAX_LENGTH = 80
     }
 }
 ```
@@ -261,6 +274,29 @@ class TextProcessor(private val dependencies: Dependencies) {
 class TextProcessor(private val normalizer: TextNormalizer) {
     fun process(text: String): String = normalizer.normalize(text)
 }
+```
+
+## Properties
+
+### Omit redundant property types
+
+- Omit a property's explicit type when it has an initializer and type inference produces the same type.
+- Keep an explicit type when omission would change the declared type or when the compiler requires it.
+
+#### Incorrect
+
+```kotlin
+private val text: String = "text"
+private var isEnabled: Boolean = false
+private val buffer: StringBuilder = StringBuilder()
+```
+
+#### Correct
+
+```kotlin
+private val text = "text"
+private var isEnabled = false
+private val buffer = StringBuilder()
 ```
 
 ## Function and constructor calls
@@ -337,23 +373,6 @@ fun template(value: String): String =
 
 ## Comments
 
-### Use line comments for single-line comments
-
-- Use `// comment` for single-line non-documentation comments; never use block-comment syntax (`/* comment */`).
-- For documentation comments, follow [Multi-line KDoc](#multi-line-kdoc).
-
-#### Incorrect
-
-```kotlin
-/* Preserve whitespace within the text. */
-```
-
-#### Correct
-
-```kotlin
-// Preserve whitespace within the text.
-```
-
 ### Multi-line KDoc
 
 - Always write KDoc comments as multi-line blocks, even for a single sentence; never use single-line `/** ... */` comments.
@@ -421,15 +440,17 @@ fun countItems(value: Any): Int {
 
 ## References
 
+- [Kotlin documentation: Variable type inference](https://kotlinlang.org/docs/basic-syntax.html#variables) — type inference; omitting redundant property types is Technoir Lab policy.
+
 - [Kotlin documentation: Multi-dollar string interpolation](https://kotlinlang.org/docs/strings.html#multi-dollar-string-interpolation)
 - [Kotlin standard library: trimIndent implementation](https://raw.githubusercontent.com/JetBrains/kotlin/master/libraries/stdlib/src/kotlin/text/Indent.kt) — whitespace behavior; matching blank-line indentation is Technoir Lab policy.
-- [Kotlin documentation: Comments](https://kotlinlang.org/docs/basic-syntax.html#comments) — comment syntax; the single-line requirement is Technoir Lab policy.
 - [Kotlin coding conventions: Source file organization](https://kotlinlang.org/docs/coding-conventions.html#source-file-organization) — the single-class default and DTO/domain-model exception are Technoir Lab policy.
 - [Android Developers: Fundamentals of dependency injection](https://developer.android.com/training/dependency-injection#fundamentals)
 - [Kotlin coding conventions: Directory structure](https://kotlinlang.org/docs/coding-conventions.html#directory-structure) — directory layout; grouping packages by feature is Technoir Lab policy.
 - [Kotlin documentation: Named arguments](https://kotlinlang.org/docs/functions.html#named-arguments)
 - [Kotlin documentation: Creating instances of classes](https://kotlinlang.org/docs/classes.html#creating-instances-of-classes)
 - [Kotlin documentation: Companion objects](https://kotlinlang.org/docs/object-declarations.html#companion-objects) — language syntax; constant placement is Technoir Lab policy.
+- [Kotlin coding conventions: Property names](https://kotlinlang.org/docs/coding-conventions.html#property-names) — naming for `const val` and immutable `val` constants.
 - [Kotlin coding conventions: Class layout](https://kotlinlang.org/docs/coding-conventions.html#class-layout)
 - [Kotlin documentation: Visibility modifiers](https://kotlinlang.org/docs/visibility-modifiers.html)
 - [Kotlin coding conventions: Annotations](https://kotlinlang.org/docs/coding-conventions.html#annotations)

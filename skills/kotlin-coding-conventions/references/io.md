@@ -141,7 +141,7 @@ import java.io.Serializable
 data class Item(val name: String) : Serializable {
     private companion object {
         @Serial
-        private const val serialVersionUID: Long = <random Long>L
+        private const val serialVersionUID = <random Long>L
     }
 }
 ```

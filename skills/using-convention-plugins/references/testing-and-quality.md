@@ -12,7 +12,7 @@
 
 ## [JVM] Shared test fixtures
 
-- In JVM library and Gradle plugin modules, put reusable test support in the provided `src/testFixtures/kotlin` source set.
+- In JVM application/library and Gradle plugin modules, put reusable test support in the provided `src/testFixtures/kotlin` source set.
 - Consume another module's fixtures through `testFixtures(project(":module"))` when sharing test helpers.
 - Add the fixture framework dependencies the fixtures themselves need; the convention applies `java-test-fixtures` but configures JUnit for test suites only.
 - For Gradle plugin integration tests, use the [provided functional test suite](gradle-plugin-modules.md#gradle-functional-tests).
