@@ -1,0 +1,4 @@
+interface:
+  display_name: "Using Convention Plugins"
+  short_description: "Use Technoir Lab convention plugins in projects"
+  default_prompt: "Use $using-convention-plugins when working in a project applying io.technoirlab.conventions.* Gradle plugins."
