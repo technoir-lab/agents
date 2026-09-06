@@ -1,5 +1,19 @@
 # Configuration and Wiring
 
+## Kotlin DSL APIs
+
+- Use Gradle Kotlin DSL extensions whenever they provide an equivalent API for the supported Gradle version, in both plugin source and build scripts.
+- Use reified type parameters or `KClass` overloads where provided; preserve lazy configuration and the operation's semantics.
+- Import the required `org.gradle.kotlin.dsl` extensions explicitly in Kotlin source files.
+
+| Operation | Kotlin DSL example | Import |
+|---|---|---|
+| Apply a project plugin by type | `project.apply<ExamplePlugin>()` | `org.gradle.kotlin.dsl.apply` |
+| Register an extension by type | `extensions.create<ExampleExtension>("example")` | `org.gradle.kotlin.dsl.create` |
+| Register a task by type | `tasks.register<ExampleTask>("example") { }` | `org.gradle.kotlin.dsl.register` |
+| Configure a named task by type | `tasks.named<ExampleTask>("example") { }` | `org.gradle.kotlin.dsl.named` |
+| Configure each task of a type lazily | `tasks.withType<ExampleTask>().configureEach { }` | `org.gradle.kotlin.dsl.withType` |
+
 ## Configuration contract
 
 | Do | Avoid |
@@ -14,6 +28,9 @@ Use `tasks.register`, `tasks.named`, and `withType<T>().configureEach`. Keep eve
 ## Extension-to-task wiring
 
 ```kotlin
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.register
+
 val extension = extensions.create<ExampleExtension>("example")
 
 tasks.register<ExampleTask>("publishMetadata") {
@@ -27,6 +44,8 @@ tasks.register<ExampleTask>("publishMetadata") {
 Connect the producer's output provider directly to the consumer's input. The provider carries the implicit task dependency.
 
 ```kotlin
+import org.gradle.kotlin.dsl.register
+
 val producerTask = tasks.register<ProducerTask>("produce") {
     outputFile.convention(layout.buildDirectory.file("producer/output.txt"))
 }
@@ -53,6 +72,10 @@ Finalize values only at a real ownership boundary:
 | Complex or computed value | Custom `ValueSource` |
 
 ```kotlin
+import org.gradle.api.provider.ValueSource
+import org.gradle.api.provider.ValueSourceParameters
+import org.gradle.kotlin.dsl.of
+
 internal abstract class ExampleValueSource :
     ValueSource<String, ValueSourceParameters.None> {
     override fun obtain(): String = UUID.randomUUID().toString()
@@ -90,6 +113,11 @@ Use parameterized messages and the narrowest useful level. Never use `println` o
 
 ## References
 
+- [Gradle Kotlin DSL: Plugin application extensions](https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.kotlin.dsl/apply.html)
+- [Gradle Kotlin DSL: Registration extensions](https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.kotlin.dsl/register.html)
+- [Gradle Kotlin DSL: Extension creation](https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.kotlin.dsl/create.html)
+- [Gradle Kotlin DSL: Named object extensions](https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.kotlin.dsl/named.html)
+- [Gradle Kotlin DSL: Type filtering extensions](https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.kotlin.dsl/with-type.html)
 - [Lazy configuration](https://docs.gradle.org/current/userguide/lazy_configuration.html)
 - [Task configuration avoidance](https://docs.gradle.org/current/userguide/task_configuration_avoidance.html)
 - [Task best practices](https://docs.gradle.org/current/userguide/best_practices_tasks.html)

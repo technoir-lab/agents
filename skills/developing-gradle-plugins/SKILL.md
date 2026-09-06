@@ -15,11 +15,12 @@ description: Use when creating, reviewing, testing, or refactoring Gradle plugin
 ## Workflow
 
 1. Identify the plugin target and supported public surface.
-2. Read every page relevant to the change; for Technoir Lab projects, apply the [Kotlin code style skill](../kotlin-code-style/SKILL.md).
+2. Read every page relevant to the change; for Technoir Lab projects, apply the [Kotlin code style skill](../kotlin-code-style/SKILL.md), and the [Using convention plugins skill](../using-convention-plugins/SKILL.md) for build setup, dependencies, testing, and publishing.
 3. Design providers and configuration roles before registering tasks.
 4. Keep project configuration isolated.
 5. Choose the smallest execution primitive that fits.
-6. Test pure logic, Gradle model configuration, and real builds.
+6. Review the completed source and build configuration against the requirements and all applicable skill guidance; correct deviations before final validation, including those automated checks cannot detect.
+7. Test pure logic, Gradle model configuration, and real builds.
 
 ## Page index
 
@@ -27,7 +28,7 @@ description: Use when creating, reviewing, testing, or refactoring Gradle plugin
 |---|---|
 | Plugin targets, marker registration, external plugin dependencies | [Plugin structure](references/plugin-structure.md) |
 | DSL, task, configuration, visibility, package, and naming contracts | [Plugin API design](references/plugin-api-design.md) |
-| Provider wiring, external inputs, configuration avoidance, logging | [Configuration and wiring](references/configuration-and-wiring.md) |
+| Kotlin DSL APIs, provider wiring, external inputs, configuration avoidance, logging | [Configuration and wiring](references/configuration-and-wiring.md) |
 | Tasks, CLI options, workers, verification failures, Problems API, `FlowAction` | [Implementing tasks](references/implementing-tasks.md) |
 | Settings defaults, project extras, artifact sharing, build services | [Cross-project communication](references/cross-project-communication.md) |
 | Unit tests, `ProjectBuilder`, TestKit, local publication | [Testing](references/testing.md) |

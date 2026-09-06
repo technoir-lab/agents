@@ -20,6 +20,10 @@ Use two kinds of tests: unit and functional.
 - Pair a consumer-supplied plugin's `compileOnly` dependency with a matching `testRuntimeOnly` or `testImplementation` dependency when a unit or model test applies or inspects that plugin.
 
 ```kotlin
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+
 internal class ExampleBuildLogic {
     fun generate(inputFile: File, outputFile: File) {
         outputFile.writeText(inputFile.readText().uppercase())
@@ -49,12 +53,16 @@ Do not use `withPluginClasspath()`.
 
 1. Apply `maven-publish` to the plugin project.
 2. Make the functional-test task depend on `publishToMavenLocal`.
-3. Use a unique test publication GAV and pass it into generated fixture text through declared test inputs.
+3. Pass the producer's publication coordinates into generated fixture text through declared test inputs. For convention builds, follow the shared [Maven Local publication guidance](../../using-convention-plugins/references/publishing.md#maven-local-publication).
 4. Add `mavenLocal()` to `pluginManagement.repositories` in the fixture settings file.
 5. Apply the published plugin by ID and version.
 6. Run the fixture with `GradleRunner`.
 
 ```kotlin
+import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Assertions.assertEquals
+
 val buildResult = GradleRunner.create()
     .withProjectDir(testProjectDir)
     .withArguments("verifyMetadata", "--stacktrace")
@@ -76,14 +84,14 @@ initscript {
         mavenLocal()
     }
     dependencies {
-        classpath("com.example:example-plugin:test-fixture")
+        classpath("com.example:example-plugin:dev")
     }
 }
 
 apply(plugin = "com.example.plugin.init")
 ```
 
-Pass the script to `GradleRunner` with `--init-script`; do not use `pluginManagement` for Init plugins.
+Use the producer's actual version in place of `dev`. Pass the script to `GradleRunner` with `--init-script`; do not use `pluginManagement` for Init plugins.
 
 ## Functional matrix
 

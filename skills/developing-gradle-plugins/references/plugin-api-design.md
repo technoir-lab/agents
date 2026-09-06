@@ -2,14 +2,15 @@
 
 ## Support boundary
 
-Default every Kotlin declaration to `internal`. Promote only types that consumers must name, configure, subclass, or instantiate.
+- Default every Kotlin declaration to `internal`. Promote a type only when supported consumer source code must reference it, such as for typed configuration, subclassing, or instantiation.
+- A user-facing task name does not require a public task class. Invocation from the command line, lifecycle wiring, and configuration by name can use an internal implementation type.
 
 | Surface | Default visibility | Package |
 |---|---|---|
 | Plugin implementation | `internal` | `com.example.plugin` |
 | Supported extension/DSL type | public | `com.example.plugin.api` |
-| Supported task type | public | `com.example.plugin.api` |
-| Internal task type | `internal` | `com.example.plugin` |
+| Task type consumers must reference in source | public | `com.example.plugin.api` |
+| Task implementation type | `internal` | `com.example.plugin` |
 | Public enum, value type, or interface | public | `com.example.plugin.api` |
 | Internal managed implementation | `internal` | `com.example.plugin` |
 
@@ -24,6 +25,8 @@ Treat Kotlin `internal` as a support contract, not a JVM-access barrier.
 - Put public bases in `.api`; let internal DSL types subclass them when implementation-only properties are required.
 
 ```kotlin
+import org.gradle.api.tasks.Nested
+
 @DslMarker
 @Target(AnnotationTarget.CLASS)
 annotation class ExampleDsl
@@ -58,7 +61,7 @@ Treat these as public API when users reference them:
 - Consumable attributes and capabilities
 - Problem group and problem IDs
 
-Keep internal task names and implementation-only configurations undocumented.
+Keep implementation-only task names and configurations undocumented.
 
 ## Custom configurations
 
@@ -71,6 +74,11 @@ Give each configuration exactly one role:
 | Consumable | Outgoing variant | No | Yes |
 
 ```kotlin
+import org.gradle.api.attributes.Category
+import org.gradle.api.attributes.Usage
+import org.gradle.kotlin.dsl.named
+import org.gradle.kotlin.dsl.register
+
 internal abstract class ExampleTask : DefaultTask() {
     @get:Classpath
     abstract val codegenClasspath: ConfigurableFileCollection
@@ -108,12 +116,13 @@ tasks.register<ExampleTask>("generateSources") {
 | Mistake | Correction |
 |---|---|
 | Exposing implementation types in public signatures | Move the type to `.api` or hide it behind a public abstraction |
-| Making every task type public | Keep types internal unless consumers must name them |
+| Making every task type public | Apply the [support boundary](#support-boundary) |
 | Combining configuration roles | Split declarable, resolvable, and consumable roles |
 | Adding setters to managed properties | Expose abstract managed property getters |
 
 ## References
 
+- [Kotlin visibility modifiers](https://kotlinlang.org/docs/visibility-modifiers.html)
 - [Public Gradle APIs](https://docs.gradle.org/current/userguide/public_apis.html)
 - [Gradle managed types](https://docs.gradle.org/current/userguide/gradle_managed_types.html)
 - [Properties and providers](https://docs.gradle.org/current/userguide/properties_providers.html)

@@ -8,7 +8,8 @@
 | Settings plugin | `Plugin<Settings>` | Settings `plugins {}` | Build structure, settings DSL, plugin/dependency resolution, project lifecycle defaults |
 | Init plugin | `Plugin<Gradle>` in `*.init.gradle.kts` | Init script or init-script plugin application | One Gradle invocation before settings and projects |
 
-Keep init plugins environment-local. Do not make a published project plugin depend on an init plugin being present.
+- Name the `apply` parameter after its concrete target: `project` for `Project`, `settings` for `Settings`, and `gradle` for `Gradle`.
+- Keep init plugins environment-local. Do not make a published project plugin depend on an init plugin being present.
 
 ## Standalone project
 
@@ -46,6 +47,8 @@ Register every published plugin ID. Keep the ID, implementation class, display n
 
 ## Plugin dependencies
 
+- Apply plugins using the [Kotlin DSL API rules](configuration-and-wiring.md#kotlin-dsl-apis).
+
 | Relationship | Dependency | Application |
 |---|---|---|
 | Distributed plugin with implementation types in use | `implementation` | Apply by class or ID |
@@ -54,6 +57,8 @@ Register every published plugin ID. Keep the ID, implementation class, display n
 | Consumer-supplied optional plugin | `compileOnly` its public or compile artifact | React with `pluginManager.withPlugin(id)` |
 
 ```kotlin
+import org.gradle.kotlin.dsl.configure
+
 internal class ExamplePlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.whenPluginApplied("com.example.required") {

@@ -14,21 +14,23 @@
 
 ## Task type contract
 
-- Use an abstract task type with managed, annotated properties.
+- Use an abstract task type with managed, annotated properties; choose visibility according to the [support boundary](plugin-api-design.md#support-boundary).
 - Mark cacheable work with `@CacheableTask`; otherwise explain the reason with `@DisableCachingByDefault`.
 - Use `@UntrackedTask(because = "...")` only when Gradle cannot or should not snapshot task state. Untracked tasks always run, cannot use `InputChanges`, and never use the build cache.
 - Give each task a unique output file or directory.
 - Use lazy file collection APIs; avoid iterating inputs during configuration.
 - Keep `Project`, `Configuration`, `SourceSet`, and other configuration models out of task actions.
 - Put serializable values, files, services, and worker parameters into task state.
-- Give user-invocable tasks a stable name, `group`, and `description`.
-- Omit `group` and `description` from internal tasks.
+- Give user-invocable tasks a stable name, `group`, and `description`, independently of their Kotlin type visibility.
+- Omit `group` and `description` from implementation-only tasks.
 
 ## CLI options
 
 Expose a task-local option with `@Option`; keep the underlying property annotated as an input.
 
 ```kotlin
+import org.gradle.api.tasks.options.Option
+
 @get:Input
 @get:Option(option = "format", description = "Select the report format")
 abstract val format: Property<String>
@@ -78,6 +80,12 @@ Use `@OptionValues` only for finite suggestions. Do not model project-wide plugi
 - Map each input to a unique output; the example requires unique input file names.
 
 ```kotlin
+import org.gradle.kotlin.dsl.submit
+import org.gradle.workers.WorkAction
+import org.gradle.workers.WorkParameters
+import org.gradle.workers.WorkerExecutor
+import javax.inject.Inject
+
 internal abstract class ExampleAction : WorkAction<ExampleAction.Parameters> {
     override fun execute() {
         val inputFile = parameters.inputFile.get().asFile
@@ -107,7 +115,7 @@ internal abstract class ExampleTask @Inject constructor(
     fun render() {
         val queue = workerExecutor.noIsolation()
         inputFiles.files.sortedBy { it.name }.forEach { inputFile ->
-            queue.submit(ExampleAction::class.java) {
+            queue.submit(ExampleAction::class) {
                 this.inputFile.set(inputFile)
                 outputFile.set(outputDirectory.file("${inputFile.name}.rendered"))
             }
@@ -125,6 +133,11 @@ internal abstract class ExampleTask @Inject constructor(
 - During non-incremental execution, process all files reported as `ADDED`; Gradle removes previous outputs.
 
 ```kotlin
+import org.gradle.api.file.FileType
+import org.gradle.work.ChangeType
+import org.gradle.work.Incremental
+import org.gradle.work.InputChanges
+
 @CacheableTask
 internal abstract class ExampleTask : DefaultTask() {
     @get:Incremental
@@ -177,6 +190,12 @@ internal abstract class ExampleTask : DefaultTask() {
 - Throw `VerificationException` only from verification work whose outputs remain valid.
 
 ```kotlin
+import org.gradle.api.problems.ProblemGroup
+import org.gradle.api.problems.ProblemId
+import org.gradle.api.problems.Problems
+import org.gradle.work.DisableCachingByDefault
+import javax.inject.Inject
+
 private object ExampleProblems {
     val group = ProblemGroup.create("com.example.reports", "Report rendering")
     val legacyFormat = ProblemId.create("legacy-format", "Legacy report format", group)
@@ -213,6 +232,14 @@ Use `FlowAction` for isolated lifecycle work that does not belong to a task, suc
 - Keep ordinary build outputs in tasks, not flow actions.
 
 ```kotlin
+import org.gradle.api.flow.FlowAction
+import org.gradle.api.flow.FlowParameters
+import org.gradle.api.flow.FlowProviders
+import org.gradle.api.flow.FlowScope
+import org.gradle.api.logging.Logging
+import org.gradle.kotlin.dsl.always
+import javax.inject.Inject
+
 internal abstract class ExampleAction : FlowAction<ExampleAction.Parameters> {
     private val logger = Logging.getLogger(ExampleAction::class.java)
 
@@ -252,6 +279,8 @@ internal class ExamplePlugin @Inject constructor(
 
 ## References
 
+- [DisableCachingByDefault annotation](https://docs.gradle.org/current/javadoc/org/gradle/work/DisableCachingByDefault.html)
+- [Gradle Kotlin DSL: Work submission extension](https://docs.gradle.org/current/kotlin-dsl/gradle/org.gradle.kotlin.dsl/submit.html)
 - [Implementing custom tasks](https://docs.gradle.org/current/userguide/custom_tasks.html)
 - [Incremental tasks](https://docs.gradle.org/current/userguide/custom_tasks.html#incremental_tasks)
 - [Task best practices](https://docs.gradle.org/current/userguide/best_practices_tasks.html)

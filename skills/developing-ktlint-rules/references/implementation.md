@@ -52,6 +52,9 @@ internal class NoVarRule :
 Emit the finding before changing the AST. Advertise correction only when approval performs a real mutation.
 
 ```kotlin
+import com.pinterest.ktlint.rule.engine.core.api.ifAutocorrectAllowed
+import com.pinterest.ktlint.rule.engine.core.api.remove
+
 emit(whiteSpace.startOffset, "Unexpected whitespace", true)
     .ifAutocorrectAllowed {
         whiteSpace.remove()
@@ -88,6 +91,7 @@ When wrapping or adapting a KtLint rule, change its rule ID and use the owning p
 - [`Rule`](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-rule-engine-core/src/main/kotlin/com/pinterest/ktlint/rule/engine/core/api/Rule.kt)
 - [`RuleAutocorrectApproveHandler`](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-rule-engine-core/src/main/kotlin/com/pinterest/ktlint/rule/engine/core/api/RuleAutocorrectApproveHandler.kt)
 - [`AutocorrectDecision`](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-rule-engine-core/src/main/kotlin/com/pinterest/ktlint/rule/engine/core/api/AutocorrectDecision.kt)
+- [AST node extensions](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-rule-engine-core/src/main/kotlin/com/pinterest/ktlint/rule/engine/core/api/ASTNodeExtension.kt)
 - [`RuleProvider`](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-rule-engine-core/src/main/kotlin/com/pinterest/ktlint/rule/engine/core/api/RuleProvider.kt)
 - [ID naming policy](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-rule-engine-core/src/main/kotlin/com/pinterest/ktlint/rule/engine/core/internal/IdNamingPolicy.kt)
 - [Template rule](https://github.com/ktlint/ktlint/blob/1.8.0/ktlint-ruleset-template/src/main/kotlin/yourpkgname/NoVarRule.kt)

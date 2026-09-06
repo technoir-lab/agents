@@ -8,12 +8,11 @@ Apply these deltas to Gradle plugin work in any repository owned by the `technoi
 
 - Use `<name>-gradle-plugin` as the module name for a standalone domain plugin.
 - Use the target repository's wrapper, version catalog, settings conventions, and existing module layout.
-- Keep external plugin and library coordinates in `gradle/libs.versions.toml`.
-- Apply `io.technoirlab.conventions.gradle-plugin` in every Gradle plugin module.
+- Follow the shared [dependency and version catalog rules](../../using-convention-plugins/references/dependencies-and-serialization.md#version-catalogs).
+- Apply `io.technoirlab.conventions.gradle-plugin` in every Gradle plugin module; follow the [Using convention plugins skill](../../using-convention-plugins/SKILL.md) for its shared usage rules.
 - Set `gradlePluginConfig.packageName` explicitly to the implementation package in every module.
-- Set `gradlePluginConfig.metadata.description` for the plugin module when the repository-wide description is not specific enough.
 - Set `gradlePluginConfig.minGradleVersion` only when the support floor differs from its `9.1` default.
-- Include a new module in `settings.gradle.kts`, the root `dokka` and `nmcpAggregation` dependencies, and the root README index.
+- Register new modules using the shared [module setup](../../using-convention-plugins/references/project-setup.md#module-setup) and update the root README index.
 
 ## Names and public surface
 
@@ -57,18 +56,14 @@ dependencies {
 - Register `GradleRunnerExtension(<fixture-name>)` with `@RegisterExtension`; mutate the copied fixture through `GradleProject` helpers.
 - Functional-test Kotlin can access `internal` declarations from `main`; the module convention wires the main compilation as a friend path.
 - Use the harness defaults: Configuration Cache, configure-on-demand, Isolated Projects, `--stacktrace`, and no build cache. Disable a feature only for a test that cannot support it.
-- Use the module convention's `publishToMavenLocal` and test-property wiring, but still satisfy the [functional-test publication contract](testing.md#functional-test-publication-contract) with a unique test publication GAV. The convention forwards `project.version`; ordinary `dev` or release coordinates are not unique.
+- Reuse the module convention's `publishToMavenLocal` and test-property wiring to satisfy the [functional-test publication contract](testing.md#functional-test-publication-contract).
 - Use `functionalTestPublishOnly` for a project artifact needed by fixture builds but not by the functional-test classpath.
 - Let the generated init script supply subject plugin marker versions, repositories, and `NO_IMPLICIT_LOOKUP_IN_PARENT_PROJECTS` when supported.
 - By default, the harness runs `gradlePluginConfig.minGradleVersion`. Set `GradleConfig.gradleVersion` for compatibility-matrix cases; the harness rejects lower versions.
 
 ## Coordinates and publication
 
-- Set the repository publication group through `project.groupId` in `gradle.properties`.
-- The root project appends `.root` to its configured group to keep coordinates unique.
-- Version resolution is `project.version`, then the GitHub tag, then `dev`. A leading `v` is stripped only from dotted version tags such as `v1.2.3`.
-- Set shared project ID, developer, licence, and other repository metadata in `globalSettings`; keep module descriptions next to each plugin declaration.
-- Publish each plugin module through root `nmcpAggregation`.
+- Follow the shared [settings and coordinate rules](../../using-convention-plugins/references/project-setup.md#settings-and-coordinates), [publication metadata rules](../../using-convention-plugins/references/publishing.md#project-metadata), and [publishing and aggregation guidance](../../using-convention-plugins/references/publishing.md).
 
 ## Convention plugins
 

@@ -21,6 +21,11 @@
 Create a typed settings extension. Pass its providers into each target project's own extras from `beforeProject`; let the Project plugin adopt them as conventions.
 
 ```kotlin
+import org.gradle.api.initialization.Settings
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.extra
+
 // Public API
 abstract class ExampleExtension {
     abstract val endpoint: Property<String>
@@ -63,6 +68,8 @@ class ExampleProjectPlugin : Plugin<Project> {
 | `afterProject` | Validate the target project's final DSL/model after its script runs |
 
 ```kotlin
+import org.gradle.kotlin.dsl.findByType
+
 gradle.lifecycle.afterProject {
     val extension = extensions.findByType<ExampleExtension>()
     check(extension == null || extension.endpoint.isPresent) {
@@ -95,6 +102,10 @@ Resolve only the consumer's configuration. Let the artifact provider carry the p
 - Never call the service provider's `get()` during configuration.
 
 ```kotlin
+import org.gradle.api.services.BuildService
+import org.gradle.api.services.BuildServiceParameters
+import org.gradle.api.services.ServiceReference
+
 internal abstract class ExampleService : BuildService<ExampleService.Parameters>, AutoCloseable {
     override fun close() {
         // Close shared resources here
