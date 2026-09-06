@@ -3,7 +3,7 @@
 ## Scope
 
 - `skills/`: one directory per skill.
-- `skills/<skill>/SKILL.md`: frontmatter, trigger description, workflow, reference index, complete source-documentation list.
+- `skills/<skill>/SKILL.md`: frontmatter, trigger description, workflow, reference index, sources supporting its own guidance.
 - `skills/<skill>/references/`: focused topic pages.
 - `skills/<skill>/agents/openai.yaml`: display name, short description, default prompt.
 - `README.md`: skill index.
@@ -21,10 +21,9 @@
 ## Sources
 
 - Use authoritative, current documentation.
-- Add `## References` to every `SKILL.md`.
-- List every document used to create or materially update the skill.
+- List every document used to create or materially update guidance under `## References` on the page it supports.
+- Do not duplicate nested-page sources in `SKILL.md`; link to the topic pages instead.
 - Use descriptive Markdown links to the source pages.
-- Add page-specific source links to each reference page.
 - Prefer direct documentation pages over home pages, search results, or secondary summaries.
 
 ## Completion
