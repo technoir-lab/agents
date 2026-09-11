@@ -21,12 +21,14 @@
 - If C interop is needed, enable it before declaring Native targets; the convention reads that flag while configuring each target.
 - When C interop is enabled, set the module's `packageName` to the generated bindings package; configure additional interops explicitly when more than the supplied main interop is needed.
 
-## [KMP] Native and Wasm application behavior
+## [KMP] Native and Wasm binaries
 
-- For iOS, tvOS, and watchOS targets, reuse the generated static framework named after the project.
-- For other Native application targets, put `main` in the configured package; the convention supplies the executable entry point.
+- For Apple application targets (macOS, iOS, tvOS, and watchOS), reuse `staticDebugFramework` and `staticReleaseFramework`; both are static frameworks with the project name as their base name.
+- For desktop Native application targets (macOS, Linux, and Windows), reuse `debugExecutable` and `releaseExecutable`; put `main` in the configured `packageName` for the supplied entry point.
+- For Android Native application targets, reuse the generated `debugShared` and `releaseShared` shared libraries for embedding in Android applications.
 - For Wasm/JS application targets, reuse the executable binary enabled by the convention.
 - Use the generated host-native `runDebugExecutable` / `runReleaseExecutable` aliases when running a Native application locally.
+- Library modules are primarily intended for consumption by KMP projects and do not register redistributable binaries by default; declare any required frameworks or other redistributable binaries explicitly.
 
 ## References
 
