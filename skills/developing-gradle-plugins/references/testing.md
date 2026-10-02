@@ -110,6 +110,14 @@ Use the producer's actual version in place of `dev`. Pass the script to `GradleR
 - Missing inputs, invalid DSL, and structured problems
 - Host-specific behavior guarded with JUnit assumptions
 
+### Kotlin compatibility checks
+
+- Compile the plugin on a newer Gradle version while retaining its declared minimum supported version.
+- Apply the published plugin in a Kotlin DSL consumer on the minimum supported Gradle version; exercise its public DSL and any implementation paths that use newer language features.
+- When testing conventions that configure compiler limits, verify rejection of public API syntax and library calls above the build-script limits, and implementation library calls above the minimum Gradle runtime's API level.
+- Supply a newer standard library on the compile classpath in API rejection fixtures to prove the configured API cap even when newer symbols are present.
+- Assert the failing compilation task and relevant compiler diagnostic so unrelated build failures cannot satisfy rejection tests.
+
 ## Common mistakes
 
 | Mistake | Correction |
@@ -121,6 +129,8 @@ Use the producer's actual version in place of `dev`. Pass the script to `GradleR
 
 ## References
 
+- [Kotlin: Choosing compatible language and API versions](https://kotlinlang.org/docs/api-guidelines-backward-compatibility.html#choose-compatible-language-and-api-versions)
+- [Gradle: Embedded Kotlin and build-script language versions](https://docs.gradle.org/current/userguide/compatibility.html#kotlin)
 - [JUnit 6 User Guide](https://docs.junit.org/current/user-guide/)
 - [Testing plugins](https://docs.gradle.org/current/userguide/testing_gradle_plugins.html)
 - [Gradle TestKit](https://docs.gradle.org/current/userguide/test_kit.html)

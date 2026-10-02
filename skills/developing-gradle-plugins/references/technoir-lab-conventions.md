@@ -11,7 +11,7 @@ Apply these deltas to Gradle plugin work in any repository owned by the `technoi
 - Follow the shared [dependency and version catalog rules](../../using-convention-plugins/references/dependencies-and-serialization.md#version-catalogs).
 - Apply `io.technoirlab.conventions.gradle-plugin` in every Gradle plugin module; follow the [Using convention plugins skill](../../using-convention-plugins/SKILL.md) for its shared usage rules.
 - Set `gradlePluginConfig.packageName` explicitly to the implementation package in every module.
-- Set `gradlePluginConfig.minGradleVersion` only when the support floor differs from its `9.1` default.
+- Set `gradlePluginConfig.minGradleVersion` only when the support floor differs from the [default minimum](../../using-convention-plugins/references/gradle-plugin-modules.md#gradle-public-api-and-compatibility); follow the shared [Kotlin compatibility rules](../../using-convention-plugins/references/gradle-plugin-modules.md#gradle-kotlin-compatibility).
 - Register new modules using the shared [module setup](../../using-convention-plugins/references/project-setup.md#module-setup) and update the root README index.
 
 ## Names and public surface
