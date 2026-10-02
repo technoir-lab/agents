@@ -6,6 +6,8 @@
 - `skills/<skill>/SKILL.md`: frontmatter, trigger description, workflow, reference index, sources supporting its own guidance.
 - `skills/<skill>/references/`: focused topic pages.
 - `skills/<skill>/agents/openai.yaml`: display name, short description, default prompt.
+- `.claude-plugin/plugin.json`: Claude Code plugin manifest; `name` namespaces every skill as `<name>:<skill>`.
+- `.claude-plugin/marketplace.json`: Claude Code marketplace manifest; its single plugin entry `source` is the repository root.
 - `README.md`: skill index.
 
 ## Authoring
@@ -33,3 +35,4 @@
 - Check every external source link.
 - Check examples for syntax and API correctness.
 - Update `README.md` when adding or renaming a skill.
+- Run `claude plugin validate . --strict`.

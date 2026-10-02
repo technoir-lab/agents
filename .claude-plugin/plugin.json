@@ -1,0 +1,19 @@
+{
+  "name": "technoir-lab-agents",
+  "version": "1.0.0",
+  "description": "Agent skills for Technoir Lab projects: Gradle plugin development, custom KtLint rules, Kotlin coding conventions, convention plugin usage, and supervised iterative design.",
+  "author": {
+    "name": "Technoir Lab",
+    "url": "https://github.com/technoir-lab"
+  },
+  "homepage": "https://github.com/technoir-lab/agents",
+  "repository": "https://github.com/technoir-lab/agents",
+  "license": "Apache-2.0",
+  "keywords": [
+    "gradle",
+    "kotlin",
+    "ktlint",
+    "conventions",
+    "design"
+  ]
+}
