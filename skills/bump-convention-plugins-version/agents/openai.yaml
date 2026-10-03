@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bump Convention Plugins Version"
+  short_description: "Update Technoir Lab convention plugins and merge update PRs"
+  default_prompt: "Use $bump-convention-plugins-version to update conventionPluginsVersion in the selected project or workspace and carry each update PR through CI and merge."

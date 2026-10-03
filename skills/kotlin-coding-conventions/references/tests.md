@@ -115,7 +115,7 @@ class TextNormalizerTest {
 }
 ```
 
-## Use AssertJ Core assertions
+## [Android] [JVM] [Gradle] Use AssertJ Core assertions
 
 - Use AssertJ Core for test assertions.
 - When asserting a return value, invoke the method under test in the Act phase and store its result in a local `val`; pass that value to `assertThat` in the Assert phase instead of invoking the method inside `assertThat`.
@@ -167,7 +167,7 @@ class NameValidationTest {
 }
 ```
 
-## Use the most specialized AssertJ assertions
+## [Android] [JVM] [Gradle] Use the most specialized AssertJ assertions
 
 - Use the most specialized AssertJ assertion for the value and condition being tested; assert on the original object instead of manually extracting values or computing conditions that AssertJ can check directly.
 - Preserve comparison semantics: AssertJ 3.x `hasContent` ignores newline differences; use `content().isEqualTo(...)` when exact text equality matters. Specify the charset when required by the file format.

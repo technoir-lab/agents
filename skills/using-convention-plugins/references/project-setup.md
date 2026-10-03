@@ -6,7 +6,7 @@
 2. Create the root `.gitignore` using the [initial Git ignores](#initial-git-ignores); preserve existing project-specific rules.
 3. Create the root `.editorconfig` by adapting the [convention plugins EditorConfig](https://github.com/technoir-lab/convention-plugins/blob/main/.editorconfig) to the project's file types and formatting requirements; preserve existing project-specific settings. KtLint needs this file to apply the project's formatting and rule configuration.
 4. Initialize the root `gradle.properties` with the [initial Gradle properties](#initial-gradle-properties), preserving existing values.
-5. Configure the settings convention's version and apply it in `settings.gradle.kts` using [plugin loading](#plugin-loading).
+5. Configure the settings convention's version, using the [latest convention plugins release](https://github.com/technoir-lab/convention-plugins/releases/latest) tag `vNN`, and apply it in `settings.gradle.kts` using [plugin loading](#plugin-loading).
 6. Set the mandatory `globalSettings.projectId`; initially default to the project's root folder name.
 7. Generate `gradle/gradle-daemon-jvm.properties` using the [daemon JVM instructions](#gradle-daemon-jvm) after the settings convention is configured.
 
@@ -63,7 +63,7 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        val conventionPluginsVersion = "v55"
+        val conventionPluginsVersion = "vNN"
         id("io.technoirlab.conventions.settings") version conventionPluginsVersion
     }
 }

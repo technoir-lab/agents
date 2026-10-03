@@ -100,7 +100,7 @@
 
 | When | Use | Dependencies | Version supplied by |
 |---|---|---|---|
-| [KMP] All targets, including JVM | AssertK | `com.willowtreeapps.assertk:assertk` | Project: declare explicitly |
+| [KMP] All targets, including JVM | `kotlin.test` assertions | `org.jetbrains.kotlin:kotlin-test` | Convention-supplied Kotlin BOM |
 | [JVM] Regular JVM application/library projects | AssertJ | `org.assertj:assertj-core` | Project: declare explicitly |
 | [Gradle] Gradle plugin projects | AssertJ | `org.assertj:assertj-core` | Project: declare explicitly |
 
@@ -147,7 +147,6 @@
 - [Clikt: Installation and multiplatform support](https://github.com/ajalt/clikt)
 - [kotlinx.coroutines: Usage and dependencies](https://github.com/Kotlin/kotlinx.coroutines)
 - [Ktor: BOM version alignment](https://ktor.io/docs/client-dependencies.html#using-the-ktor-bom-dependency)
-- [AssertK: Setup and multiplatform support](https://github.com/assertk-org/assertk)
 - [AssertJ Core: Quick start](https://assertj.github.io/doc/#assertj-core-quick-start)
 - [kotlin-logging: Publishing configuration](https://raw.githubusercontent.com/oshai/kotlin-logging/master/build.gradle.kts)
 - [Metro: Installation and runtime dependency](https://zacsweers.github.io/metro/latest/installation/)
