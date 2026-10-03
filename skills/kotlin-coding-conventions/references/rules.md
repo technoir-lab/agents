@@ -299,6 +299,19 @@ private var isEnabled = false
 private val buffer = StringBuilder()
 ```
 
+## Function decomposition
+
+### Extract cohesive functions at semantic boundaries
+
+- Apply this rule both when writing new code and when refactoring existing code.
+- When writing new code, structure functions as decomposed from the start; do not write a monolithic function intending to split it later.
+- When refactoring existing code, apply **Extract Function** (**Extract Method** for class members) to functions that combine distinct responsibilities or mix levels of abstraction.
+- Keep the coordinating function at one level of abstraction: name the stages by their intent and delegate their implementation to cohesive helpers. Use **Split Phase** when successive stages operate on different representations, passing an explicit intermediate result between them.
+- Choose extraction boundaries by cohesion and data flow, not an arbitrary line-count limit. Keep compact dispatch branches, cohesive mappings, and builder expressions together unless a helper expresses an independently meaningful operation.
+- Prefer private helpers with explicit inputs and return values. If several stages share related mutable state, use a small private context scoped to one invocation; do not promote temporary state to fields on a reusable service or pass unrelated state to helpers.
+- When refactoring existing code, preserve observable behavior, evaluation order, side effects, error handling, cleanup order, and resource lifetimes. Keep ordering dependencies visible in the coordinating function.
+- When refactoring existing code, verify the refactoring with relevant existing tests and, for deterministic transformations, compare the resulting output.
+
 ## Function and constructor calls
 
 ### Keep arguments in parameter declaration order
@@ -440,8 +453,9 @@ fun countItems(value: Any): Int {
 
 ## References
 
+- [Martin Fowler: Extract Function / Extract Method](https://refactoring.com/catalog/extractFunction.html) — refactoring terminology; extraction criteria are Technoir Lab policy.
+- [Martin Fowler: Split Phase](https://refactoring.com/catalog/splitPhase.html) — separate processing stages using an intermediate representation.
 - [Kotlin documentation: Variable type inference](https://kotlinlang.org/docs/basic-syntax.html#variables) — type inference; omitting redundant property types is Technoir Lab policy.
-
 - [Kotlin documentation: Multi-dollar string interpolation](https://kotlinlang.org/docs/strings.html#multi-dollar-string-interpolation)
 - [Kotlin standard library: trimIndent implementation](https://raw.githubusercontent.com/JetBrains/kotlin/master/libraries/stdlib/src/kotlin/text/Indent.kt) — whitespace behavior; matching blank-line indentation is Technoir Lab policy.
 - [Kotlin coding conventions: Source file organization](https://kotlinlang.org/docs/coding-conventions.html#source-file-organization) — the single-class default and DTO/domain-model exception are Technoir Lab policy.
