@@ -18,6 +18,15 @@ Apply this page only in repositories owned by the `technoir-lab` GitHub organisa
 - When a local rules library exists, its conventional name is `ktlint-rules`.
 - Do not create a project-local library merely because none exists; create one only when the request includes a new local rule set.
 
+## Dependencies and publication
+
+- Use `compileOnly` for directly referenced KtLint APIs, Kotlin compiler AST/PSI types, and ec4j types; the KtLint host supplies these at runtime.
+- Keep both `ktlint-cli-ruleset-core` and `ktlint-rule-engine-core` compile-only; changing only the direct compiler dependency leaves a transitive compiler path through the APIs.
+- Declare test dependencies separately: `testImplementation` for APIs referenced by tests, `testRuntimeOnly` for dependencies needed only during test execution.
+- Keep any required compiler version constraint on compile-only and test configurations so it is not published to consumers.
+- Keep other runtime dependencies on `implementation` unless the host also supplies them.
+- After changing scopes, verify the generated POM, Gradle module metadata, and runtime dependency graph omit the host dependencies; run rule/provider tests and a consumer KtLint invocation.
+
 ## New project-local library
 
 - Add the `ktlint-rules` module to `settings.gradle.kts` using the repository's project layout.
@@ -35,15 +44,21 @@ jvmLibrary {
 }
 
 dependencies {
-    implementation(libs.ktlint.cli.ruleset.core)
-    implementation(libs.ktlint.rule.engine.core)
+    compileOnly(libs.kotlin.compiler.embeddable)
+    compileOnly(libs.ktlint.cli.ruleset.core)
+    compileOnly(libs.ktlint.rule.engine.core)
 
     testImplementation(libs.assertj.core)
+    testImplementation(libs.ktlint.cli.ruleset.core)
+    testImplementation(libs.ktlint.rule.engine.core)
     testImplementation(libs.ktlint.test)
+
+    testRuntimeOnly(libs.kotlin.compiler.embeddable)
 }
 ```
 
 - Use the repository's version-catalog aliases; keep KtLint dependencies on `1.8.0`.
+- Add `compileOnly(libs.ec4j.core)` when rules reference ec4j types; add `testImplementation(libs.ec4j.core)` when tests reference them.
 - Add the rule sources, provider, ServiceLoader descriptor, and tests described on the other pages.
 
 ## Placement checklist
@@ -60,3 +75,6 @@ dependencies {
 - [`ktlint-rules` library](https://github.com/technoir-lab/convention-plugins/tree/main/libraries/ktlint-rules)
 - [`ktlint-rules` Gradle module](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/ktlint-rules/build.gradle.kts)
 - [`TechnoirLabRuleSetProvider`](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/ktlint-rules/src/main/kotlin/io/technoirlab/ktlint/rules/TechnoirLabRuleSetProvider.kt)
+- [Gradle dependency configurations](https://docs.gradle.org/current/userguide/dependency_configurations.html)
+- [Gradle compile-only dependencies and host-provided APIs](https://blog.gradle.org/introducing-compile-only-dependencies)
+- [KtLint custom ruleset loading](https://ktlint.github.io/ktlint/1.8.0/api/custom-rule-set/)

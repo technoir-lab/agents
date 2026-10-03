@@ -1,6 +1,6 @@
 ---
 name: developing-ktlint-rules
-description: Use when implementing, modifying, reviewing, or unit testing custom KtLint rules and RuleSetProviderV3 rule sets, including EditorConfig options, opt-in markers, and auto-correction.
+description: Use when implementing, modifying, reviewing, or unit testing custom KtLint rules and RuleSetProviderV3 rule sets, including EditorConfig options, opt-in markers, auto-correction, and ruleset dependency or publication configuration.
 ---
 
 # Developing KtLint Rules
@@ -27,7 +27,7 @@ description: Use when implementing, modifying, reviewing, or unit testing custom
 
 | Need | Read |
 |---|---|
-| Repository placement and policy delta | [Conventions](references/conventions.md) |
+| Repository placement, dependency scopes, and publication | [Conventions](references/conventions.md) |
 | Rule lifecycle, IDs, diagnostics, state, review, auto-correction | [Implementation](references/implementation.md) |
 | Custom EditorConfig options, experimental rules, explicit opt-in | [Configurability](references/configurability.md) |
 | Rule and provider unit tests | [Testing](references/testing.md) |
@@ -35,6 +35,6 @@ description: Use when implementing, modifying, reviewing, or unit testing custom
 
 ## Boundaries
 
-- Add or modify Gradle module configuration only when the requested rule set requires a new rules library.
+- Modify existing ruleset build configuration when required by the requested rule, dependency, or publication work; create a new rules library only when explicitly requested.
 - Do not copy unpinned examples from KtLint `master`.
 - Do not reuse one `Rule` instance across provider calls.
