@@ -6,6 +6,7 @@ Agent skills for Technoir Lab's projects.
 Skills
 ------
 
+- [bump-convention-plugins-version](skills/bump-convention-plugins-version/SKILL.md)
 - [developing-gradle-plugins](skills/developing-gradle-plugins/SKILL.md)
 - [developing-ktlint-rules](skills/developing-ktlint-rules/SKILL.md)
 - [kotlin-coding-conventions](skills/kotlin-coding-conventions/SKILL.md)
