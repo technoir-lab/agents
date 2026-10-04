@@ -130,7 +130,7 @@
 
 ## References
 
-- [Convention JUnit version and test-suite configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/Testing.kt)
+- [Convention JUnit version and test-suite configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/TestSuites.kt)
 - [JVM compiler, BOM, and ABI configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/Kotlin.kt)
 - [KMP targets, hierarchy, BOMs, ABI, and C interop](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/kotlin-multiplatform-conventions/src/main/kotlin/io/technoirlab/conventions/kotlin/multiplatform/configuration/KotlinMultiplatform.kt)
 - [Technoir Lab: Gradle extension helpers](https://github.com/technoir-lab/convention-plugins/tree/main/libraries/gradle-extensions)

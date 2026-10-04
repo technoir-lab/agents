@@ -21,7 +21,7 @@
 
 | When | Use | Convention behavior |
 |---|---|---|
-| Validate module changes | `./gradlew :module:check` | Runs configured checks, including enabled ABI validation and Kover HTML reporting |
+| Validate module changes | `./gradlew :module:check` | Runs configured checks, including unit tests, enabled ABI validation, and Kover HTML reporting; excludes [Gradle plugin functional tests](gradle-plugin-modules.md#gradle-functional-tests) |
 | Check or correct Kotlin formatting | `:module:ktlintCheck` / `:module:ktlintFormat` | Uses the pinned KtLint version and Technoir Lab ruleset; excludes generated build-directory files |
 | Normalize dependency ordering | `:module:sortDependencies` | Uses the already applied dependency-sorting plugin |
 | Inspect JVM test coverage | [Kover tasks](#jvm-coverage) | Uses the supplied instrumentation and report filters |
@@ -59,7 +59,7 @@
 - [Kover: Report tasks, verification, and project coverage](https://kotlin.github.io/kotlinx-kover/gradle-plugin/)
 - [JUnit 6 user guide: Overview](https://docs.junit.org/6.1.3/overview.html)
 - [Convention dependency versions](https://github.com/technoir-lab/convention-plugins/blob/main/gradle/libs.versions.toml)
-- [JUnit suite configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/Testing.kt)
+- [JUnit suite configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/TestSuites.kt)
 - [Test fixtures configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/TestFixtures.kt)
 - [JVM application plugin](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/jvm-conventions/src/main/kotlin/io/technoirlab/conventions/jvm/JvmApplicationConventionPlugin.kt)
 - [JVM library plugin](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/jvm-conventions/src/main/kotlin/io/technoirlab/conventions/jvm/JvmLibraryConventionPlugin.kt)

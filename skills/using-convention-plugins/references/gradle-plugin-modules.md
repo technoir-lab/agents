@@ -32,7 +32,7 @@
 ## [Gradle] Functional tests
 
 - Put TestKit integration tests in `src/functionalTest/kotlin`; the convention supplies `functionalTest`, Gradle TestKit, the project dependency, and JUnit.
-- Run `./gradlew :module:functionalTest` for integration checks; `check` already includes this suite.
+- Run `./gradlew :module:functionalTest` for integration checks; `build` includes this suite, `check` does not.
 - Reuse the suite's plugin test-source-set wiring and access to main compilation internals.
 - Read `gradle.test.kit.plugin.ids`, `gradle.test.kit.plugin.version`, and `gradle.test.kit.min.gradle.version` system properties when fixtures need the plugin coordinates or compatibility floor.
 - For fixture-only project plugins that must be published locally, add the project dependency to `functionalTestPublishOnly`.
