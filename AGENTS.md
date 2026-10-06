@@ -12,8 +12,8 @@
 
 ## Authoring
 
-- Avoid prose.
-- Prefer bullets, tables, short directives, and code blocks.
+- Use bullets, tables, and code blocks for reference data: APIs, options, commands, mappings.
+- Write behavioral rules as short sentences that carry their reason when it is not self-evident; avoid narrative prose.
 - Keep each fact in one location; link to it elsewhere.
 - Keep examples abstract: neutral names, minimal domain assumptions, no project-specific fixtures.
 - Keep example code correct for its stated language, API, and context.

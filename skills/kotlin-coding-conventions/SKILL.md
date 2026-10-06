@@ -24,7 +24,7 @@ description: Apply Technoir Lab Kotlin coding conventions when creating or editi
 | Tag        | Applies to                                                                                                   |
 |------------|--------------------------------------------------------------------------------------------------------------|
 | no tag     | any Kotlin project                                                                                           |
-| `[Android]` | Android projects                                                                                           |
+| `[Android]` | Android projects, including Android target source sets in Kotlin Multiplatform projects; exclude Android Native source sets |
 | `[JVM]`    | JVM code, including JVM source sets in Kotlin Multiplatform projects; exclude common and non-JVM source sets |
 | `[KMP]`    | Kotlin Multiplatform projects only; exclude regular JVM projects                                             |
 | `[Gradle]` | Source code of Gradle plugins and Kotlin build scripts (*.kts)                                               |

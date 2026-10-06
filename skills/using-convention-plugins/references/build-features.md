@@ -17,7 +17,7 @@
 
 ## ABI baselines
 
-- [Gradle] ABI validation us enabled by default for Gradle plugin modules.
+- [Gradle] ABI validation is enabled by default for Gradle plugin modules.
 - [JVM] For regular JVM application/library modules, enable it when API compatibility is a project requirement; these modules default to disabled.
 - [KMP] For KMP application/library modules, enable it when API compatibility is a project requirement; these modules default to disabled.
 - After intentional API changes, run `./gradlew :module:updateKotlinAbi` and review the generated files under `api/`.

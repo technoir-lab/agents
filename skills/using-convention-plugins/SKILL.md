@@ -9,6 +9,7 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 
 - Do not apply `io.technoirlab.conventions.common` directly; it is an internal implementation plugin.
 - Use the convention's public DSL and supplied tasks for functionality it owns.
+- Written against convention plugins `v59`.
 - Match guidance to the project's convention-plugin version; consult implementation and public APIs when README examples disagree.
 
 ## Workflow
@@ -28,7 +29,7 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 | `[Gradle]` | Gradle plugin development: plugin source code, public DSL/API, tests, and plugin-module configuration |
 
 - Tags on headings apply to the entire section; tags on rows or bullets further narrow that scope.
-- Combined tags require all listed scopes; module-specific conditions still apply.
+- Multiple tags apply a rule to each listed scope; module-specific conditions still apply.
 - Leave general build configuration rules untagged; version catalogs, shared feature switches, and project setup apply across project types.
 
 ## Page index

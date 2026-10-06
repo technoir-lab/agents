@@ -117,7 +117,7 @@ class TextNormalizerTest {
 
 ## [Android] [JVM] [Gradle] Use AssertJ Core assertions
 
-- Use AssertJ Core for test assertions.
+- Use AssertJ Core for test assertions. In KMP projects, use the [KMP assertion library](../../using-convention-plugins/references/tech-stack.md#assertions) in every test source set instead, including JVM and Android ones.
 - When asserting a return value, invoke the method under test in the Act phase and store its result in a local `val`; pass that value to `assertThat` in the Assert phase instead of invoking the method inside `assertThat`.
 - Only when catching and verifying an exception thrown by a suspend function, use JUnit's Kotlin `org.junit.jupiter.api.assertThrows` instead of `org.assertj.core.api.Assertions.assertThatThrownBy`.
 

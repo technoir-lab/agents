@@ -37,14 +37,14 @@ Repeat for each owning repository, including all selected projects in it.
 4. Read each selected project's `settings.gradle.kts` in the prepared checkout and confirm its version before changing it.
 5. For each selected project, set `val conventionPluginsVersion = "vNN"`. Adapt the project to build-breaking changes and, where feasible, apply relevant minor quality-of-life improvements from the release. Include these changes in the same update commit as the version bump.
 6. Sanity check each selected project: `./gradlew ktlintCheck test checkSortDependencies`
-7. Stage ONLY the selected projects' `settings.gradle.kts` files and related release adaptations and improvements — never stage unrelated dirty/untracked files
+7. Stage only the selected projects' `settings.gradle.kts` files and related release adaptations and improvements; leave unrelated modified and untracked files unstaged, because they belong to other work.
 8. Commit: `Bump conventionPluginsVersion to vNN`
 9. Push the branch
 10. Create PR via `gh pr create`: title `Bump conventionPluginsVersion to vNN`, no body, label `dependencies`.
 11. For public repositories only: `gh pr merge <url> --auto --squash`. Never enable auto-merge for private repositories or their pull requests: GitHub Free cannot enforce required status checks there, so auto-merge could merge before CI passes.
 12. Verify per PR: label present; for public repositories, `autoMergeRequest` non-null (post-merge `UNKNOWN`/404 on auto-merge PUT is expected — check PR `state` first); for private repositories, auto-merge disabled.
-13. Monitor CI checks on every PR. Investigate failures, push fixes, and repeat until all CI checks pass for the latest PR head commit.
-    - Public repositories: continue monitoring and addressing failures until the PR is auto-merged; verify its state is `MERGED`.
+13. Monitor CI checks on every PR. Investigate failures, push fixes for those the update causes, and repeat until all CI checks pass for the latest PR head commit. Report a failure that predates the update or is unrelated to it instead of fixing it in the update PR: the PR merges without human review, so anything pushed to it lands on `main` unreviewed.
+    - Public repositories: continue monitoring and addressing update-caused failures until the PR is auto-merged; verify its state is `MERGED`.
     - Private repositories: once all CI checks pass for the latest PR head commit, merge with `gh pr merge <url> --squash --match-head-commit <verified-head-sha>` and verify its state is `MERGED`. If the head changes, check CI again before merging.
 14. When done with a temporary worktree, leave its directory and remove it with `git worktree remove <temporary-path>`. Do not force-remove uncommitted work; if unfinished changes prevent cleanup, preserve them and report the retained path and reason. After each PR is merged, switch the original local checkout to `main` and run `git pull --ff-only origin main` if possible without disturbing unrelated local changes. Leave an originally dirty checkout on its original branch with its edits intact. Report any checkout or update that could not be completed.
 
