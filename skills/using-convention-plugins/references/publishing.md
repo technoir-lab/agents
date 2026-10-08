@@ -1,6 +1,7 @@
 # Publishing and Documentation
 
-- For JVM libraries, KMP libraries, and Gradle plugin modules, reuse the supplied Maven publications: `libraryMaven`, `kotlinMultiplatform`, or `pluginMaven`, respectively.
+- Reuse the supplied Maven publications: `libraryMaven` for JVM and Android libraries, `kotlinMultiplatform` for KMP libraries, and `pluginMaven` for Gradle plugin modules.
+- Android libraries publish the release AAR with sources and Dokka documentation; enabled [Android test fixtures](android.md#android-build-features) are published with that variant.
 
 ## Maven Central publication
 
@@ -20,7 +21,7 @@
 
 - Add `nmcpAggregation(project(":module"))` dependencies at the root for modules being published to Maven Central.
 - Provide `SIGNING_KEY` and `SIGNING_PASSWORD` through the environment for publication signing; the convention configures in-memory keys.
-- Use the settings convention's NMCP setup and `CENTRAL_PORTAL_USER` / `CENTRAL_PORTAL_PASSWORD`; publishing mode is `USER_MANAGED`.
+- Use the settings convention's NMCP setup and `CENTRAL_PORTAL_USER` / `CENTRAL_PORTAL_PASSWORD`; publishing mode is `AUTOMATIC`, so successful Central Portal validation proceeds to publication without manual approval.
 - Inspect the existing publication and repository tasks before running the project's release procedure.
 - When targeting a custom remote repository, configure `publish.<name>.url`; supply both `publish.<name>.username` and `publish.<name>.password` when authentication is required.
 
@@ -59,4 +60,7 @@
 - [Publishing repository properties and environment](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-extensions/src/main/kotlin/io/technoirlab/gradle/Environment.kt)
 - [Maven Central publishing configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/settings-conventions/src/main/kotlin/io/technoirlab/conventions/settings/configuration/Publishing.kt)
 - [Root plugin implementation](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/root-conventions/src/main/kotlin/io/technoirlab/conventions/root/RootConventionPlugin.kt)
-- [Root aggregation examples](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/root-conventions/src/functionalTest/kotlin/io/technoirlab/conventions/root/RootConventionPluginTest.kt)
+- [Root aggregation examples](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/root-conventions/src/functionalTest/kotlin/io/technoirlab/conventions/root/RootConventionPluginFunctionalTest.kt)
+- [Android library publication configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/android-conventions/src/main/kotlin/io/technoirlab/conventions/android/AndroidLibraryConventionPlugin.kt)
+- [Android release variant and sources configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/android-conventions/src/main/kotlin/io/technoirlab/conventions/android/configuration/Android.kt)
+- [Android fixture publication behavior](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/android-conventions/README.md)

@@ -9,7 +9,7 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 
 - Do not apply `io.technoirlab.conventions.common` directly; it is an internal implementation plugin.
 - Use the convention's public DSL and supplied tasks for functionality it owns.
-- Written against convention plugins `v59`.
+- Written against convention plugins `v60`.
 - Match guidance to the project's convention-plugin version; consult implementation and public APIs when README examples disagree.
 
 ## Workflow
@@ -24,6 +24,7 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 | Tag | Applies to |
 |---|---|
 | no tag | Any project within this skill's scope |
+| `[Android]` | Modules using the Android application/library conventions; exclude KMP Android targets and Android Native source sets |
 | `[JVM]` | JVM code and targets, including JVM source sets in KMP projects; exclude common and non-JVM source sets |
 | `[KMP]` | Kotlin Multiplatform projects only; exclude regular JVM projects |
 | `[Gradle]` | Gradle plugin development: plugin source code, public DSL/API, tests, and plugin-module configuration |
@@ -40,8 +41,9 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 | Plugin selection, DSL names, settings, coordinates, JVM execution | [Project setup](references/project-setup.md) |
 | Direct dependencies, API exposure, version catalogs, serialization | [Dependencies and serialization](references/dependencies-and-serialization.md) |
 | ABI validation, BuildConfig, redaction, optional feature defaults | [Build features](references/build-features.md) |
-| JUnit, KMP tests, fixtures, lint, coverage, dependency analysis | [Testing and quality](references/testing-and-quality.md) |
+| Compiler diagnostics, JUnit, KMP tests, fixtures, lint, coverage, dependency analysis | [Testing and quality](references/testing-and-quality.md) |
 | Public plugin APIs, Gradle compatibility, TestKit integration | [Gradle plugin modules](references/gradle-plugin-modules.md) |
+| Android SDK defaults, application IDs, BuildConfig, Parcelize, test fixtures | [Android projects](references/android.md) |
 | KMP targets, benchmarks, Metro, C interop, Native/Wasm binaries | [Multiplatform projects](references/multiplatform.md) |
 | Maven Central or Maven Local publication, project metadata, API documentation | [Publishing and documentation](references/publishing.md) |
 

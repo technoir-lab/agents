@@ -43,10 +43,10 @@
 | When | Use | Dependencies | Version supplied by |
 |---|---|---|---|
 | [Gradle] Reusable helpers for plugin implementation | Technoir Lab Gradle extensions | `io.technoirlab.conventions:gradle-extensions` | Convention dependency resolution |
-| [Gradle] Test-project fixtures and Gradle runner helpers for functional tests | Technoir Lab Gradle test helpers | `io.technoirlab.conventions:gradle-test-kit` | Convention dependency resolution |
+| [Gradle] ProjectBuilder helpers for unit tests and Gradle runner helpers for functional tests | Technoir Lab Gradle test helpers | `io.technoirlab.conventions:gradle-test-kit` | Convention dependency resolution |
 
 - Versionless libraries in `io.technoirlab.conventions` resolve to the applied convention's version.
-- [Gradle] Add `gradle-test-kit` to `functionalTestImplementation`; it supplements Gradle's own TestKit dependency already supplied to the [functional test suite](gradle-plugin-modules.md#gradle-functional-tests).
+- [Gradle] Add `gradle-test-kit` to `testImplementation` for [ProjectBuilder helpers](gradle-plugin-modules.md#gradle-unit-tests-and-dependency-helpers), or to `functionalTestImplementation` for runner helpers; it supplements Gradle's own TestKit dependency already supplied to the [functional test suite](gradle-plugin-modules.md#gradle-functional-tests).
 
 ## I/O
 
@@ -89,6 +89,7 @@
 |---|---|---|---|
 | [KMP] All targets, including JVM | `kotlin-test` test framework | `org.jetbrains.kotlin:kotlin-test` | Convention-supplied Kotlin BOM |
 | [JVM] Regular JVM application/library projects | JUnit 6 | `org.junit.jupiter:junit-jupiter` (provided by conventions) | Convention test-suite configuration |
+| [Android] Local unit tests | JUnit 6 | `org.junit.jupiter:junit-jupiter` (provided by conventions) | Convention Android test configuration |
 | [Gradle] Gradle plugin projects | JUnit 6 | `org.junit.jupiter:junit-jupiter` (provided by conventions) | Convention test-suite configuration |
 | Tests of suspending functions and coroutine behavior in any project | kotlinx.coroutines test utilities: `runTest` and virtual-time scheduling | `org.jetbrains.kotlinx:kotlinx-coroutines-test` | Convention-supplied coroutines BOM |
 
@@ -124,7 +125,7 @@
 
 | When | Use | Dependencies | Version supplied by |
 |---|---|---|---|
-| Generated data-class `toString()` output must redact sensitive values | Redacted compiler plugin | `dev.zacsweers.redacted:redacted-compiler-plugin-annotations` (provided by default when enabled) | Convention-applied Redacted plugin |
+| Generated data-class `toString()` output must redact sensitive values in JVM, KMP, or Gradle plugin modules | Redacted compiler plugin | `dev.zacsweers.redacted:redacted-compiler-plugin-annotations` (provided by default when enabled) | Convention-applied Redacted plugin |
 
 - Follow [shared feature setup](build-features.md#shared-feature-switches).
 
@@ -166,3 +167,5 @@
 - [Metro feature wiring](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/kotlin-multiplatform-conventions/src/main/kotlin/io/technoirlab/conventions/kotlin/multiplatform/configuration/Metro.kt)
 - [KMP benchmark configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/kotlin-multiplatform-conventions/src/main/kotlin/io/technoirlab/conventions/kotlin/multiplatform/configuration/Benchmarking.kt)
 - [Redacted feature wiring](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/Redacted.kt)
+- [ProjectBuilder helper implementations](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/ProjectBuilder.kt)
+- [Android local unit-test dependencies](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/android-conventions/src/main/kotlin/io/technoirlab/conventions/android/configuration/Testing.kt)

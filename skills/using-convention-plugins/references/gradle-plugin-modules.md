@@ -39,6 +39,20 @@
 - Follow the [Maven Local publication guidance](publishing.md#maven-local-publication), including version isolation when concurrent builds can publish to the same coordinates.
 - Use the existing `validatePlugins` task; stricter plugin validation is already enabled.
 
+## [Gradle] Unit tests and dependency helpers
+
+- Reuse the convention-provided `testImplementation(gradleKotlinDsl())` for `org.gradle.kotlin.dsl` helpers in unit tests; implementation code retains the compile-only dependency.
+- Add the [Gradle test helpers](tech-stack.md#gradle-plugin-development) to `testImplementation` when unit tests need ProjectBuilder helpers from `io.technoirlab.gradle.test.kit`:
+
+| Helper | Behavior |
+|---|---|
+| `createRootProject(name) { ... }` | Builds a root project, applies the optional project lambda, then attaches settings |
+| `project.subProject(name) { ... }` | Builds a child project under the parent's project directory |
+| `project.evaluate()` | Evaluates the project after plugin application and configuration |
+
+- Keep task execution and Gradle-version compatibility checks in [functional tests](#gradle-functional-tests); these ProjectBuilder helpers use Gradle internals and do not run builds.
+- In plugin implementation code using `DependencyHandlerScope`, import helpers from `io.technoirlab.gradle.dependencies`: `compileOnlyApi`, `testFixturesApi`, `testFixturesCompileOnly`, `testFixturesCompileOnlyApi`, `testFixturesImplementation`, and `testFixturesRuntimeOnly`. These add dependencies to existing configurations; they do not create the configurations or apply `java-test-fixtures`.
+
 ## References
 
 - [Kotlin: Choosing compatible language and API versions](https://kotlinlang.org/docs/api-guidelines-backward-compatibility.html#choose-compatible-language-and-api-versions)
@@ -50,3 +64,5 @@
 - [Gradle and Kotlin compatibility mapping](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/internal/GradleCompatibility.kt)
 - [Gradle plugin API dependency helper](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/GradlePluginDslExtensions.kt)
 - [TestKit system property names](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/configuration/GradleTestKitProperties.kt)
+- [ProjectBuilder helper implementations](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/ProjectBuilder.kt)
+- [Dependency declaration helpers](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-extensions/src/main/kotlin/io/technoirlab/gradle/dependencies/Dependencies.kt)

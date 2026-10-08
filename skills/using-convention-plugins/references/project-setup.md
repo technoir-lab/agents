@@ -36,12 +36,14 @@
 - Apply the plugin matching the module's role; use its extension for convention-owned settings.
 - Set the extension's `packageName` explicitly when generated code, entry points, or published APIs require a stable package.
 - Reuse the Kotlin, KSP, KtLint, and Kover plugins already applied by the module convention; configure the supplied extensions when needed.
-- [JVM] Reuse the configured Java 21 toolchain unless the project has an explicit compatibility requirement.
+- [JVM] Reuse the configured Java 21 toolchain for JVM and Gradle plugin modules unless the project has an explicit compatibility requirement; use the [Android compilation defaults](android.md#android-module-configuration) for Android modules.
 
 | Scope | When | Plugin ID | Extension |
 |---|---|---|---|
 | Settings | Configure build-wide defaults | `io.technoirlab.conventions.settings` | `globalSettings` |
 | Root project | Aggregate documentation and coverage | `io.technoirlab.conventions.root` | See [documentation](publishing.md#documentation) and [coverage](testing-and-quality.md#jvm-coverage) |
+| [Android] | Build an Android application | `io.technoirlab.conventions.android-application` | `androidApplication`; see [Android setup](android.md) |
+| [Android] | Build an Android library | `io.technoirlab.conventions.android-library` | `androidLibrary`; see [Android setup](android.md) |
 | [JVM] | Build a runnable JVM application | `io.technoirlab.conventions.jvm-application` | `jvmApplication` |
 | [JVM] | Build a regular JVM library | `io.technoirlab.conventions.jvm-library` | `jvmLibrary` |
 | [KMP] | Build a multiplatform application | `io.technoirlab.conventions.kotlin-multiplatform-application` | `kotlinMultiplatformApplication` |
@@ -53,6 +55,7 @@
 - Declare all Gradle plugin versions managed by the project in the `pluginManagement.plugins` block of `settings.gradle.kts`; apply plugins without versions in settings and project `plugins` blocks. Do not declare plugin versions in version catalogs or root/module build scripts; reuse convention-supplied plugin versions without adding duplicate declarations.
 - Declare one `conventionPluginsVersion` variable in `pluginManagement.plugins` and use it for every convention plugin version declaration.
 - List every public convention plugin used by the build in the top-level `plugins` block of `settings.gradle.kts` so they are loaded once in the settings classloader. Use `apply false` for project convention plugins and apply the settings convention there.
+- [Android] Add `google()` to `pluginManagement.repositories` so the Android convention's AGP dependencies can resolve; the settings convention's dependency repositories do not configure plugin resolution.
 
 Minimal `settings.gradle.kts` for initial setup before any modules exist; use the root folder name in place of `example`:
 
@@ -161,3 +164,4 @@ kotlin.daemon.jvmargs=-Xmx1g -XX:+UseParallelGC
 - [kotlin-multiplatform plugin ID declarations](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/kotlin-multiplatform-conventions/build.gradle.kts)
 - [root plugin ID declarations](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/root-conventions/build.gradle.kts)
 - [settings plugin ID declarations](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/settings-conventions/build.gradle.kts)
+- [Android plugin IDs and AGP dependencies](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/android-conventions/build.gradle.kts)

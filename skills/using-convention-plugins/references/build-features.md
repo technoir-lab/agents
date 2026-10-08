@@ -5,13 +5,14 @@
 - Configure features inside the selected module extension's `buildFeatures` block.
 - Do not enable optional build features unless needed by the module's current requirements; do not enable them speculatively or copy unused feature switches from examples.
 - Preserve convention defaults unless a module requirement calls for a change; shared feature switches default to `false`, except the Gradle plugin ABI default below.
+- For Android modules, follow the [Android feature rules](android.md#android-build-features); supported switches and BuildConfig variant names differ.
 
 | When | Use | Provided behavior |
 |---|---|---|
-| A library exposes an API whose compatibility must be tracked | `abiValidation = true` | Enables Kotlin ABI validation and attaches its check to `check` |
-| Configure the [redaction library](tech-stack.md#redaction) | `redacted = true` | Applies the compiler plugin; annotate the relevant declarations using its API |
+| A JVM, KMP, or Gradle plugin module exposes an API whose compatibility must be tracked | `abiValidation = true` | Enables Kotlin ABI validation and attaches its check to `check` |
+| Configure the [redaction library](tech-stack.md#redaction) in a JVM, KMP, or Gradle plugin module | `redacted = true` | Applies the compiler plugin; annotate the relevant declarations using its API |
 | Build-time values must be available to source code | `buildConfig { buildConfigField("VALUE", "value") }` | Generates BuildConfig only when fields are declared, using the module's `packageName` |
-| Only one source set needs a generated value | `buildConfigField("VALUE", "value", variant = "test")` | Restricts the field to the matching source set |
+| Only one source set needs a generated value in a JVM, KMP, or Gradle plugin module | `buildConfigField("VALUE", "value", variant = "test")` | Restricts the field to the matching source set |
 | BuildConfig values come from Gradle providers | The `buildConfigField` provider overload | Keeps the value provider-backed; an absent provider omits the field |
 | Serializable models need generated serializers | [Serialization setup](dependencies-and-serialization.md#serialization) | Uses the convention's serialization feature |
 
