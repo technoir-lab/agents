@@ -2,138 +2,149 @@
 
 - Apply the [platform tags](../SKILL.md#platform-tags) to select applicable rules.
 
-## Declare a private Json property
+## Own serialization format configuration
 
-- Always declare a private property holding a `Json` instance and use it for encoding and decoding; never call the global `Json` object directly.
-- Configure the instance for the data format as needed, for example with `namingStrategy = JsonNamingStrategy.SnakeCase` or `ignoreUnknownKeys = true`; neither setting is mandatory.
-- Use `private val json = Json` when default settings are sufficient.
+- Keep a fixed serialization contract's format and configuration in a private property of its serializer class, as a [stable implementation detail](rules.md#distinguish-collaborators-from-implementation-details). Use that property for encoding and decoding; avoid direct global calls and file-level or companion configuration.
+- Inject the format only when the API delegates configuration or lifetime ownership to the caller, not solely for testing. Test the serializer's public behavior with its real configuration, including field names, defaults, and unknown fields; substitute the application serializer in consumer tests.
+- Create each serializer once per application or DI scope and [inject it](rules.md#inject-dependencies-through-the-constructor) into consumers, so its format and caches are reused; do not create serializers or formats per operation. `Json` is immutable and thread-safe; confirm other formats' thread safety before sharing them across threads.
+- Apply this ownership rule across formats, using the project's chosen library and configuration API:
 
-### Incorrect
+| Format | Example |
+|---|---|
+| JSON | kotlinx.serialization `Json` |
+| YAML | kotaml `Yaml` |
+| XML | xmlutil `XML` |
+
+- The `ItemSerializer` examples use this model:
 
 ```kotlin
-import kotlinx.serialization.encodeToString
+// Item.kt
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Item(
+    val displayName: String,
+    val count: Int
+)
+```
+
+### Incorrect: caller controls a fixed contract
+
+```kotlin
+// ItemSerializer.kt
 import kotlinx.serialization.json.Json
 
-fun encodeValues(values: Map<String, String>): String =
-    Json.encodeToString(values)
+class ItemSerializer(private val json: Json) {
+    fun encodeItem(item: Item): String = json.encodeToString(item)
 
-fun decodeValues(text: String): Map<String, String> =
-    Json.decodeFromString(text)
+    fun decodeItem(text: String): Item = json.decodeFromString(text)
+}
 ```
 
 ### Correct
 
 ```kotlin
-import kotlinx.serialization.encodeToString
+// ItemSerializer.kt
 import kotlinx.serialization.json.Json
 
-private val json = Json
+class ItemSerializer {
+    private val json = Json
 
-fun encodeValues(values: Map<String, String>): String =
-    json.encodeToString(values)
+    fun encodeItem(item: Item): String = json.encodeToString(item)
 
-fun decodeValues(text: String): Map<String, String> =
-    json.decodeFromString(text)
+    fun decodeItem(text: String): Item = json.decodeFromString(text)
+}
 ```
 
 ### Optional configuration
 
-- When the data format requires these settings, replace the property declaration with:
+- Use `Json` for defaults or `Json { ... }` for required settings. For example, configure the property in `ItemSerializer` as follows; neither setting is mandatory:
 
 ```kotlin
+// ItemSerializer.kt
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 
-@OptIn(ExperimentalSerializationApi::class)
-private val json = Json {
-    namingStrategy = JsonNamingStrategy.SnakeCase
-    ignoreUnknownKeys = true
+class ItemSerializer {
+    @OptIn(ExperimentalSerializationApi::class)
+    private val json = Json {
+        namingStrategy = JsonNamingStrategy.SnakeCase
+        ignoreUnknownKeys = true
+    }
+
+    // encodeItem and decodeItem as above
 }
 ```
 
 ## Use typed models for fixed schemas
 
-- For objects whose field names and types are known at compile time, define typed `@Serializable` models and use them for both serialization and deserialization.
-- Do not represent fixed-schema objects with `JsonObject`, `JsonElement`, or dynamic key-value maps; reserve these representations for schema portions whose structure is determined at runtime.
-
-Given JSON object:
-
-```json
-{"name": "sample", "count": 3}
-```
+- Use typed `@Serializable` models for encoding and decoding known field names and types. Reserve `JsonObject`, `JsonElement`, and dynamic maps for schema portions determined at runtime.
+- Both examples decode `{"displayName":"sample","count":3}` into the `Item` model above.
 
 ### Incorrect
 
 ```kotlin
-import kotlinx.serialization.encodeToString
+// ItemSerializer.kt
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.int
 import kotlinx.serialization.json.jsonPrimitive
 
-private val json = Json
+class ItemSerializer {
+    private val json = Json
 
-data class Item(
-    val name: String,
-    val count: Int
-)
-
-fun parseItem(text: String): Item {
-    val item = json.decodeFromString<JsonObject>(text)
-    return Item(
-        name = item.getValue("name").jsonPrimitive.content,
-        count = item.getValue("count").jsonPrimitive.int
-    )
+    fun decodeItem(text: String): Item {
+        val item = json.decodeFromString<JsonObject>(text)
+        return Item(
+            displayName = item.getValue("displayName").jsonPrimitive.content,
+            count = item.getValue("count").jsonPrimitive.int
+        )
+    }
 }
 ```
 
 ### Correct
 
 ```kotlin
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
+// ItemSerializer.kt
 import kotlinx.serialization.json.Json
 
-@Serializable
-data class Item(
-    val name: String,
-    val count: Int
-)
+class ItemSerializer {
+    private val json = Json
 
-private val json = Json
-
-fun parseItem(text: String): Item =
-    json.decodeFromString<Item>(text)
+    fun decodeItem(text: String): Item = json.decodeFromString<Item>(text)
+}
 ```
 
 ## [Android] [JVM] Prefer streams for file I/O
 
-- When encoding JSON to or decoding JSON from a `java.io.File` or `java.nio.file.Path` on JVM, prefer `encodeToStream` / `decodeFromStream` over `encodeToString` / `decodeFromString` with `writeText` / `readText`.
-- Opt in with `@OptIn(ExperimentalSerializationApi::class)` on the declarations using the stream APIs.
-- Close opened streams with `use`.
+- For JSON in `java.io.File` or `java.nio.file.Path`, prefer `encodeToStream` / `decodeFromStream` over string conversion with `writeText` / `readText`.
+- Opt in on declarations using the stream APIs and close streams with `use`.
 
 ### Incorrect
 
 ```kotlin
-import java.io.File
-import kotlinx.serialization.encodeToString
+import java.nio.file.Path
+import kotlin.io.path.readText
+import kotlin.io.path.writeText
 import kotlinx.serialization.json.Json
 
-private val json = Json {}
+class ValuesFileSerializer {
+    private val json = Json
 
-fun writeValues(file: File, values: Map<String, String>) {
-    file.writeText(json.encodeToString(values))
+    fun writeValues(path: Path, values: Map<String, String>) {
+        path.writeText(json.encodeToString(values))
+    }
+
+    fun readValues(path: Path): Map<String, String> =
+        json.decodeFromString(path.readText())
 }
-
-fun readValues(file: File): Map<String, String> =
-    json.decodeFromString(file.readText())
 ```
 
 ### Correct
 
 ```kotlin
-import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
@@ -142,37 +153,31 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
 
-private val json = Json {}
+class ValuesFileSerializer {
+    private val json = Json
 
-@OptIn(ExperimentalSerializationApi::class)
-fun writeValues(file: File, values: Map<String, String>) {
-    file.outputStream().use { output ->
-        json.encodeToStream(values, output)
+    @OptIn(ExperimentalSerializationApi::class)
+    fun writeValues(path: Path, values: Map<String, String>) {
+        path.outputStream().use { output ->
+            json.encodeToStream(values, output)
+        }
     }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    fun readValues(path: Path): Map<String, String> =
+        path.inputStream().use { input ->
+            json.decodeFromStream<Map<String, String>>(input)
+        }
 }
-
-@OptIn(ExperimentalSerializationApi::class)
-fun readValues(file: File): Map<String, String> =
-    file.inputStream().use { input ->
-        json.decodeFromStream<Map<String, String>>(input)
-    }
-
-@OptIn(ExperimentalSerializationApi::class)
-fun writeValues(path: Path, values: Map<String, String>) {
-    path.outputStream().use { output ->
-        json.encodeToStream(values, output)
-    }
-}
-
-@OptIn(ExperimentalSerializationApi::class)
-fun readValues(path: Path): Map<String, String> =
-    path.inputStream().use { input ->
-        json.decodeFromStream<Map<String, String>>(input)
-    }
 ```
 
 ## References
 
+- [kotlinx.serialization: SerialFormat](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-serial-format/)
+- [kotaml: Usage samples](https://github.com/Heapy/kotaml#usage-samples)
+- [xmlutil: Format configuration](https://github.com/pdvrieze/xmlutil#format)
+- [kotlinx.serialization: Json](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-json/kotlinx.serialization.json/-json/) — serializer ownership is Technoir Lab policy.
+- [kotlinx.serialization guide: Json configuration](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/json.md#json-configuration) — configuration, thread safety, and reuse.
 - [Kotlin documentation: Serialization](https://kotlinlang.org/docs/serialization.html)
 - [kotlinx.serialization: Serializable](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-serializable/)
 - [kotlinx.serialization JSON: JsonObject](https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-json/kotlinx.serialization.json/-json-object/)

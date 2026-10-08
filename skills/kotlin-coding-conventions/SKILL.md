@@ -12,7 +12,7 @@ description: Apply Technoir Lab Kotlin coding conventions when creating or editi
 
 ## Workflow
 
-1. Read [style rules](references/rules.md) before creating or editing Kotlin files.
+1. Read [style rules](references/rules.md) and [object declarations](references/objects.md) before creating or editing Kotlin files.
 2. When creating or editing tests, also read [test style rules](references/tests.md).
 3. When using kotlinx.serialization, also read [kotlinx.serialization rules](references/kotlinx-serialization.md).
 4. When working with closeable resources, files, URLs, or Java serialization, also read [I/O rules](references/io.md).
@@ -34,8 +34,9 @@ description: Apply Technoir Lab Kotlin coding conventions when creating or editi
 | Need | Read |
 |---|---|
 | Style rules with incorrect and correct Kotlin examples | [Style rules](references/rules.md) |
+| Object allowlist, dependency ownership, and interoperability exceptions | [Object declarations](references/objects.md) |
 | Test naming, body structure, assertions, annotation order, and code snippets | [Test style rules](references/tests.md) |
-| kotlinx.serialization models, JSON configuration, and file I/O | [kotlinx.serialization rules](references/kotlinx-serialization.md) |
+| kotlinx.serialization models, format configuration (JSON, YAML, XML), and file I/O | [kotlinx.serialization rules](references/kotlinx-serialization.md) |
 | Closeable resources, file paths, URLs, and Java serialization | [I/O rules](references/io.md) |
 
 ## References

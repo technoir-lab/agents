@@ -118,6 +118,7 @@ class TextBuffer(input: String) {
 - Declare constants related to a class or used primarily by it inside that class's companion object.
 - Apply this placement rule to both `const val` and `val` constants named in `UPPER_SNAKE_CASE`.
 - Declare top-level constants only when they have no related class, including constants associated with top-level functions.
+- Constant holders must meet the [object allowlist](objects.md#allowlist); a `val` referencing a service or mutable contents is not a constant.
 
 #### Incorrect
 
@@ -209,10 +210,21 @@ class TextPreview {
 
 ## Dependency injection
 
+### Distinguish collaborators from implementation details
+
+- A stable dependency has predictable behavior, an established compatible API, and no need for separate substitution, configuration, or lifetime management in its current role. Having no dependencies alone does not make it stable.
+- Construct stable implementation details internally and keep behavior-defining configuration with them; see [serialization format ownership](kotlinx-serialization.md#own-serialization-format-configuration).
+- Inject external or replaceable collaborators, including application services, clocks, external-system access, and dependencies whose configuration or lifetime belongs to the caller.
+- Internal ownership does not authorize global services or extend the [object allowlist](objects.md#allowlist).
+
 ### Inject dependencies through the constructor
 
-- Receive a class's dependencies through constructor parameters; do not instantiate them inside the class.
-- Apply this rule to manual dependency injection and DI frameworks, including Dagger and Metro.
+- Receive collaborating services through constructor parameters. Assemble them and own their lifetimes at the application entry point or DI graph, manually or with frameworks such as Dagger or Metro; inject a factory or provider for deferred or repeated creation.
+- Do not construct collaborators inside consumers, hold services in global properties, or obtain them through singleton names or service locators. Pass services explicitly to top-level functions too.
+- Construct owned values, internal state, working collections, and factory products where needed.
+- If a framework prevents constructor injection, use its supported injection mechanism at that boundary and constructor injection in delegated classes.
+- Follow the [object declaration policy](objects.md) when choosing declaration forms.
+- Example: `TextNormalizer` is a replaceable application service selected by the caller.
 
 #### Incorrect
 
@@ -227,7 +239,10 @@ class TextProcessor {
     fun process(text: String): String = normalizer.normalize(text)
 }
 
-val processor = TextProcessor()
+fun main() {
+    val processor = TextProcessor()
+    println(processor.process(" text "))
+}
 ```
 
 #### Correct
@@ -241,8 +256,11 @@ class TextProcessor(private val normalizer: TextNormalizer) {
     fun process(text: String): String = normalizer.normalize(text)
 }
 
-val normalizer = TextNormalizer()
-val processor = TextProcessor(normalizer)
+fun main() {
+    val normalizer = TextNormalizer()
+    val processor = TextProcessor(normalizer)
+    println(processor.process(" text "))
+}
 ```
 
 ### Inject only the dependencies the class needs
@@ -460,9 +478,10 @@ fun countItems(value: Any): Int {
 - [Kotlin standard library: trimIndent implementation](https://raw.githubusercontent.com/JetBrains/kotlin/master/libraries/stdlib/src/kotlin/text/Indent.kt) — whitespace behavior; matching blank-line indentation is Technoir Lab policy.
 - [Kotlin coding conventions: Source file organization](https://kotlinlang.org/docs/coding-conventions.html#source-file-organization) — the single-class default and DTO/domain-model exception are Technoir Lab policy.
 - [Android Developers: Fundamentals of dependency injection](https://developer.android.com/training/dependency-injection#fundamentals)
+- [van Deursen and Seemann: Stable and volatile dependencies, sections 1.3.1–1.3.2](https://livebook.manning.com/book/dependency-injection-principles-practices-patterns/chapter-1/) — dependency classification; ownership rules are Technoir Lab policy.
 - [Kotlin coding conventions: Directory structure](https://kotlinlang.org/docs/coding-conventions.html#directory-structure) — directory layout; grouping packages by feature is Technoir Lab policy.
 - [Kotlin documentation: Named arguments](https://kotlinlang.org/docs/functions.html#named-arguments)
-- [Kotlin documentation: Creating instances of classes](https://kotlinlang.org/docs/classes.html#creating-instances-of-classes)
+- [Kotlin documentation: Creating instances of classes](https://kotlinlang.org/docs/classes.html#creating-instances)
 - [Kotlin documentation: Companion objects](https://kotlinlang.org/docs/object-declarations.html#companion-objects) — language syntax; constant placement is Technoir Lab policy.
 - [Kotlin coding conventions: Property names](https://kotlinlang.org/docs/coding-conventions.html#property-names) — naming for `const val` and immutable `val` constants.
 - [Kotlin coding conventions: Class layout](https://kotlinlang.org/docs/coding-conventions.html#class-layout)
