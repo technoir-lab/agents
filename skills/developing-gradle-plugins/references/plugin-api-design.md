@@ -21,6 +21,7 @@ Treat Kotlin `internal` as a support contract, not a JVM-access barrier.
 - Prefer abstract classes or interfaces created through `ObjectFactory`, `ExtensionContainer`, or another Gradle container.
 - Expose `Property<T>`, `ListProperty<T>`, `SetProperty<T>`, `MapProperty<K,V>`, `RegularFileProperty`, and `DirectoryProperty`.
 - Apply one custom `@DslMarker` annotation to the extension and its nested DSL types.
+- Keep the marker `internal` with `AnnotationRetention.BINARY`; its scope checks still apply to consumers.
 - Avoid mutable fields, collection getters returning raw mutable collections, and constructors that accept project state.
 - Put public bases in `.api`; let internal DSL types subclass them when implementation-only properties are required.
 
@@ -28,8 +29,9 @@ Treat Kotlin `internal` as a support contract, not a JVM-access barrier.
 import org.gradle.api.tasks.Nested
 
 @DslMarker
+@Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS)
-annotation class ExampleDsl
+internal annotation class ExampleDsl
 
 @ExampleDsl
 interface ExampleExtension {
@@ -123,6 +125,7 @@ tasks.register<ExampleTask>("generateSources") {
 ## References
 
 - [Kotlin visibility modifiers](https://kotlinlang.org/docs/visibility-modifiers.html)
+- [Kotlin annotation retention](https://kotlinlang.org/docs/annotations.html#declaration)
 - [Public Gradle APIs](https://docs.gradle.org/current/userguide/public_apis.html)
 - [Gradle managed types](https://docs.gradle.org/current/userguide/gradle_managed_types.html)
 - [Properties and providers](https://docs.gradle.org/current/userguide/properties_providers.html)
