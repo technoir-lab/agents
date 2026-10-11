@@ -27,7 +27,7 @@
 
 - In JVM application/library and Gradle plugin modules, put reusable test support in the provided `src/testFixtures/kotlin` source set.
 - Consume another module's fixtures through `testFixtures(project(":module"))` when sharing test helpers.
-- Reuse the Kotlin, kotlinx.coroutines, and kotlinx.serialization BOMs now supplied to `testFixturesImplementation`; declare the libraries the fixtures use without duplicating managed versions.
+- Reuse the Kotlin, kotlinx.coroutines, and kotlinx.serialization BOMs supplied to `testFixturesImplementation`; declare the libraries the fixtures use without duplicating managed versions.
 - Add the fixture framework dependencies the fixtures themselves need; the convention applies `java-test-fixtures` but configures JUnit for test suites only.
 - JVM fixture variants are excluded from publication; Android fixtures have separate [opt-in and publication behavior](android.md#android-build-features).
 - For Gradle plugin integration tests, use the [provided functional test suite](gradle-plugin-modules.md#gradle-functional-tests).

@@ -138,7 +138,6 @@ assertThat(result).isEqualTo("text")
 ### Correct
 
 ```kotlin
-import kotlinx.coroutines.test.runTest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -303,7 +302,6 @@ private fun writeKotlinSource(
 
 ## References
 
-- [kotlinx.coroutines test: runTest](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/kotlinx.coroutines.test/run-test.html)
 - [JUnit user guide: Assertions and Kotlin assertion support](https://docs.junit.org/6.1.3/writing-tests/assertions.html)
 - [AssertJ API: Path assertions](https://www.javadoc.io/static/org.assertj/assertj-core/3.27.7/org/assertj/core/api/AbstractPathAssert.html)
 - [AssertJ Core: Quick start](https://assertj.github.io/doc/#assertj-core-quick-start)

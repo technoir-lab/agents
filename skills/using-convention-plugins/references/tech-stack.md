@@ -91,9 +91,11 @@
 | [JVM] Regular JVM application/library projects | JUnit 6 | `org.junit.jupiter:junit-jupiter` (provided by conventions) | Convention test-suite configuration |
 | [Android] Local unit tests | JUnit 6 | `org.junit.jupiter:junit-jupiter` (provided by conventions) | Convention Android test configuration |
 | [Gradle] Gradle plugin projects | JUnit 6 | `org.junit.jupiter:junit-jupiter` (provided by conventions) | Convention test-suite configuration |
-| Tests of suspending functions and coroutine behavior in any project | kotlinx.coroutines test utilities: `runTest` and virtual-time scheduling | `org.jetbrains.kotlinx:kotlinx-coroutines-test` | Convention-supplied coroutines BOM |
+| [KMP] Tests of suspending functions and coroutine behavior | kotlinx.coroutines test utilities: `runTest` and virtual-time scheduling | `org.jetbrains.kotlinx:kotlinx-coroutines-test` | Convention-supplied coroutines BOM |
+| [Android] [JVM] [Gradle] Coroutine tests that need virtual time or test dispatchers | kotlinx.coroutines test utilities: `runTest` and virtual-time scheduling | `org.jetbrains.kotlinx:kotlinx-coroutines-test` | Convention-supplied coroutines BOM |
 
 - [KMP] Use `kotlin.test` test annotations in both common and target-specific test source sets; do not introduce direct JUnit dependencies or imports for KMP JVM tests.
+- [Android] [JVM] [Gradle] Write other tests of suspending functions as JUnit `suspend` test methods, as in the [test style rules](../../kotlin-coding-conventions/references/tests.md#android-jvm-gradle-use-assertj-core-assertions); JUnit runs them with `runBlocking` and requires `kotlinx-coroutines-core` on the test runtime classpath.
 - Follow [test setup and fixture rules](testing-and-quality.md) for dependency and source-set wiring.
 - Declare `kotlinx-coroutines-test` in test source sets only.
 
@@ -163,6 +165,7 @@
 - [kotaml: YAML support and supported targets](https://github.com/Heapy/kotaml)
 - [Kotlin test API](https://kotlinlang.org/api/core/kotlin-test/)
 - [JUnit 6 user guide: Overview](https://docs.junit.org/6.1.3/overview.html)
+- [JUnit 6 user guide: Kotlin coroutines](https://docs.junit.org/6.1.3/writing-tests/test-classes-and-methods.html#kotlin-coroutines)
 - [Gradle API variant and functional test configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/configuration/Plugin.kt)
 - [Metro feature wiring](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/kotlin-multiplatform-conventions/src/main/kotlin/io/technoirlab/conventions/kotlin/multiplatform/configuration/Metro.kt)
 - [KMP benchmark configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/kotlin-multiplatform-conventions/src/main/kotlin/io/technoirlab/conventions/kotlin/multiplatform/configuration/Benchmarking.kt)
