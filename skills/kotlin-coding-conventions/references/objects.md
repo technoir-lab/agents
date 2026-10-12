@@ -10,12 +10,13 @@
 | Role | Form and limits |
 |---|---|
 | Constants | Use a companion for [class-associated constants](rules.md#keep-class-associated-constants-in-the-companion-object); use a named object only for a cohesive namespace without a related class. Allow only `const val` or immutable `val` constants with deterministic, dependency-free initialization. No services, mutable contents, environment reads, I/O, or methods. |
+| Factory or registration for the containing class | Use a companion for methods that create or register instances of the containing class. Private helpers supporting these methods are allowed. Keep dependencies and the registration scope explicit; do not retain created instances or mutable registration state in the companion. No contract exception is required. |
 | Payload-free sealed value | Use `data object` for a value, event, or result case, without services, mutable state, or behavior. States that perform transitions do not qualify. |
 | Identity token | Use an object or companion for a key/marker contract such as `CoroutineContext.Key<T>`, with only identity and type association. No service behavior or mutable state; prefer a value or enum when singleton identity is unnecessary. |
 | Required compiler, platform, or existing interoperability contract | Keep only required members and identify the exact contract in a comment or KDoc. Use explicit inputs or delegate behavior to ordinary classes. Optional framework examples and convenience APIs do not establish necessity. |
 
 - `val` prevents reassignment, not mutation. Caches, registries, clients, dispatchers, and resource owners are not constants.
-- Companion factories and utilities require a contract exception even when dependency-free; otherwise use constructors, top-level functions with explicit inputs, or injected factory classes.
+- Other companion utilities require a contract exception even when dependency-free; otherwise use top-level functions with explicit inputs or ordinary classes.
 
 ### Values and keys
 
@@ -58,7 +59,7 @@ class RequestId(val value: String) : AbstractCoroutineContextElement(Key) {
 | [JVM] Existing Java/reflection API requiring a static member on a particular Kotlin class | Use a companion with `@JvmStatic` or `@JvmField` as appropriate. Static access alone is insufficient: top-level functions already compile to static methods on a file facade. |
 | Kotlin/JS external class with static members | A companion inside the `external class` describes members of the external constructor. It does not create an application service. |
 
-- Necessity depends on the chosen integration contract. Constants, sealed values, and identity keys are permitted modeling choices with alternatives. Leave generated declarations to their generator; they do not authorize handwritten service objects.
+- Necessity depends on the chosen integration contract. The other allowlisted roles do not require an integration contract. Leave generated declarations to their generator; they do not authorize handwritten service objects.
 
 ## Anonymous object expressions
 
