@@ -60,10 +60,13 @@
 
 | When | Use | Dependencies | Version supplied by |
 |---|---|---|---|
-| [KMP] All targets, including JVM | [kotlin-logging](https://github.com/oshai/kotlin-logging) | `io.github.oshai:kotlin-logging` | Project: declare explicitly |
-| [JVM] Regular JVM application/library projects | SLF4J 2.x | `org.slf4j:slf4j-api`, `org.slf4j:slf4j-simple` | Project: declare a shared SLF4J version |
+| [KMP] All targets, including JVM and Android | [kotlin-logging](https://github.com/oshai/kotlin-logging) | `io.github.oshai:kotlin-logging` | Project: declare explicitly |
+| [JVM] Regular JVM application/library projects | SLF4J 2.x facade | `org.slf4j:slf4j-api` | Project: declare a shared SLF4J version |
+| [Android] Android application/library projects | Timber | `com.jakewharton.timber:timber` | Project: declare explicitly |
 | [Gradle] Gradle plugin projects | Gradle's `org.gradle.api.logging.Logger`, which extends SLF4J's logger API | Provided by the Gradle API | Gradle runtime |
 
+- [JVM] Add the `org.slf4j:slf4j-simple` provider only to application `runtimeOnly` or `testRuntimeOnly` configurations; a provider in a library's dependencies is forced on its consumers.
+- [Android] Plant `Tree` instances in `Application.onCreate`; Timber logs nothing until a tree is planted.
 - [Gradle] Reuse Gradle's logging implementation; do not add a separate logging facade or provider to plugin code.
 
 ## HTTP
@@ -159,7 +162,8 @@
 - [Ktor: Client engines](https://ktor.io/docs/client-engines.html)
 - [Ktor: Server engines](https://ktor.io/docs/server-engines.html)
 - [kotlin-logging repository](https://github.com/oshai/kotlin-logging)
-- [SLF4J manual: API and version 2.x](https://www.slf4j.org/manual.html)
+- [SLF4J manual: API, providers, and library dependencies](https://www.slf4j.org/manual.html)
+- [Timber: Setup and dependency](https://github.com/JakeWharton/timber)
 - [Gradle API: Logger](https://docs.gradle.org/current/javadoc/org/gradle/api/logging/Logger.html)
 - [kotlinx.serialization guide](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/serialization-guide.md)
 - [kotaml: YAML support and supported targets](https://github.com/Heapy/kotaml)
