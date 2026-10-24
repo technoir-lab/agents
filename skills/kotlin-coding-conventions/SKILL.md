@@ -35,7 +35,7 @@ description: Apply Technoir Lab Kotlin coding conventions when creating or editi
 |---|---|
 | Style rules with incorrect and correct Kotlin examples | [Style rules](references/rules.md) |
 | Object allowlist, dependency ownership, and interoperability exceptions | [Object declarations](references/objects.md) |
-| Test naming, body structure, assertions, annotation order, and code snippets | [Test style rules](references/tests.md) |
+| Test naming, package and source set placement of tests and test doubles, body structure, assertions, annotation order, and code snippets | [Test style rules](references/tests.md) |
 | kotlinx.serialization models, format configuration (JSON, YAML, XML), and file I/O | [kotlinx.serialization rules](references/kotlinx-serialization.md) |
 | Closeable resources, file paths, URLs, and Java serialization | [I/O rules](references/io.md) |
 

@@ -63,6 +63,56 @@ src/test/kotlin/io/technoirlab/example/text/TextNormalizerTest.kt
 
 - Both files declare `package io.technoirlab.example.text`.
 
+## Keep test doubles in the same package as the type they implement
+
+- Declare a test double (stub, fake, mock, spy, or dummy) that implements a production interface or extends a production class in the same package as that production type, within the [appropriate test source set](#android-jvm-gradle-keep-reusable-test-doubles-in-the-test-fixtures-source-set), so the test source tree mirrors the production layout and the double stays next to the contract it satisfies.
+
+### Incorrect
+
+```kotlin
+package io.technoirlab.example.doubles
+
+import io.technoirlab.example.text.NormalizationRules
+
+class StubNormalizationRules(override val trimWhitespace: Boolean = true) : NormalizationRules
+```
+
+### Correct
+
+```kotlin
+package io.technoirlab.example.text
+
+class StubNormalizationRules(override val trimWhitespace: Boolean = true) : NormalizationRules
+```
+
+- `NormalizationRules` is declared in `package io.technoirlab.example.text`, so the stub needs no import.
+
+## [Android] [JVM] [Gradle] Keep reusable test doubles in the test fixtures source set
+
+- Place a test double used by more than one test class, or consumed by other modules, in the `src/testFixtures/kotlin` source set rather than `src/test/kotlin`, so every test suite and dependent module shares one implementation through [shared test fixtures](../../using-convention-plugins/references/testing-and-quality.md#jvm-shared-test-fixtures).
+- Keep a test double used by a single test class in the test source set.
+- In Android library modules, enable [Android test fixtures](../../using-convention-plugins/references/android.md#android-build-features) first.
+
+### Incorrect
+
+```text
+src/main/kotlin/io/technoirlab/example/text/NormalizationRules.kt
+src/test/kotlin/io/technoirlab/example/text/StubNormalizationRules.kt
+src/test/kotlin/io/technoirlab/example/text/TextNormalizerTest.kt
+src/test/kotlin/io/technoirlab/example/text/TextSanitizerTest.kt
+```
+
+- Both test classes use `StubNormalizationRules`.
+
+### Correct
+
+```text
+src/main/kotlin/io/technoirlab/example/text/NormalizationRules.kt
+src/testFixtures/kotlin/io/technoirlab/example/text/StubNormalizationRules.kt
+src/test/kotlin/io/technoirlab/example/text/TextNormalizerTest.kt
+src/test/kotlin/io/technoirlab/example/text/TextSanitizerTest.kt
+```
+
 ## Keep the subject under test in a private property
 
 - Declare the subject under test and its dependencies as private properties of the test class.
@@ -310,3 +360,6 @@ private fun writeKotlinSource(
 - [Kotlin standard library: Path.writeText](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io.path/write-text.html)
 - [Kotlin coding conventions: Names for test methods](https://kotlinlang.org/docs/coding-conventions.html#names-for-test-methods)
 - [JUnit user guide: Annotations](https://docs.junit.org/6.1.3/writing-tests/annotations.html)
+- [Martin Fowler: Test Double](https://martinfowler.com/bliki/TestDouble.html)
+- [Kotlin coding conventions: Directory structure](https://kotlinlang.org/docs/coding-conventions.html#directory-structure)
+- [Gradle user guide: Using test fixtures](https://docs.gradle.org/current/userguide/java_testing.html#sec:java_test_fixtures)
