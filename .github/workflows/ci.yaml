@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  merge_group:
+    types: [ checks_requested ]
+
+concurrency:
+  group: ${{ github.workflow_ref }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-26.04
+
+    permissions:
+      contents: read
+
+    env:
+      CLAUDE_CODE_VERSION: 2.1.316
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.5.0
+        with:
+          node-version: 24
+
+      - name: Validate marketplace manifest
+        run: npx --yes "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" plugin validate . --strict
+
+      - name: Validate plugin manifest
+        run: npx --yes "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" plugin validate .claude-plugin/plugin.json --strict
+
+  actionlint:
+    name: Lint GitHub Actions
+    runs-on: ubuntu-26.04
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@v1.81.1
+        with:
+          level: warning
+          fail_level: warning
