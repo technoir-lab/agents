@@ -58,7 +58,9 @@ dependencies {
 - Use the harness defaults: Configuration Cache, configure-on-demand, Isolated Projects, `--stacktrace`, and no build cache. Disable a feature only for a test that cannot support it.
 - Reuse the module convention's `publishToMavenLocal` and test-property wiring to satisfy the [functional-test publication contract](testing.md#functional-test-publication-contract).
 - Use `functionalTestPublishOnly` for a project artifact needed by fixture builds but not by the functional-test classpath.
-- Let the generated init script supply subject plugin marker versions, repositories, and `NO_IMPLICIT_LOOKUP_IN_PARENT_PROJECTS` when supported.
+- Let the generated init script supply repositories.
+- Apply fixture plugins in `plugins` blocks without versions. Declare their versions in the fixture settings file's `pluginManagement.plugins` block, except for plugins whose versions the generated init script supplies: IDs registered in the module's `gradlePlugin.plugins`, `org.jetbrains.kotlin.jvm`, `org.jetbrains.kotlin.multiplatform`, `org.jetbrains.kotlin.plugin.compose`, `org.jetbrains.kotlin.plugin.serialization`, and `org.jlleitschuh.gradle.ktlint`.
+- Declare libraries used by fixture builds in the fixture's `gradle/libs.versions.toml`, following the shared [version catalog rules](../../using-convention-plugins/references/dependencies-and-serialization.md#version-catalogs). Reference them through `libs` accessors in fixture build scripts and in build-script text appended by tests; do not hard-code dependency coordinates.
 - By default, the harness runs `gradlePluginConfig.minGradleVersion`. Set `GradleConfig.gradleVersion` for compatibility-matrix cases; the harness rejects lower versions.
 
 ## Coordinates and publication
@@ -98,6 +100,9 @@ Apply these additional rules to organisation build conventions:
 
 ## References
 
+- [Gradle: Default `libs` version catalog](https://docs.gradle.org/current/userguide/version_catalogs.html#sec:importing-catalog-from-file)
+- [Gradle: Plugin version management](https://docs.gradle.org/current/userguide/plugins_intermediate.html#sec:plugin_version_management)
+
 ### Standalone domain plugin examples
 
 - [KMP Gradle plugins repository settings and module registration](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/settings.gradle.kts)
@@ -107,3 +112,5 @@ Apply these additional rules to organisation build conventions:
 - [CMake import plugin API](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/cmake-import-gradle-plugin/src/api/kotlin/io/technoirlab/cmake/import/api/CMakeImportExtension.kt)
 - [CMake import plugin implementation](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/cmake-import-gradle-plugin/src/main/kotlin/io/technoirlab/cmake/import/CMakeImportPlugin.kt)
 - [CMake public task API](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/cmake-import-gradle-plugin/src/main/kotlin/io/technoirlab/cmake/import/tasks/CMakeBuildTask.kt)
+- [Device Run fixture plugin version management](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/device-run-gradle-plugin/src/functionalTest/resources/device-run-fixture/settings.gradle.kts)
+- [Device Run fixture version catalog](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/device-run-gradle-plugin/src/functionalTest/resources/device-run-fixture/gradle/libs.versions.toml)
