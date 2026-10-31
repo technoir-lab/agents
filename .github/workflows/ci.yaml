@@ -28,9 +28,9 @@ jobs:
         uses: actions/checkout@v7.0.1
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6.5.0
+        uses: actions/setup-node@v7.1.0
         with:
-          node-version: 24
+          node-version: 26
 
       - name: Validate marketplace manifest
         run: npx --yes "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" plugin validate . --strict
