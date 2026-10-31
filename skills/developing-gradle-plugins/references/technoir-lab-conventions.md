@@ -48,6 +48,41 @@ dependencies {
 - Add the ordinary dependency separately when the module also uses or distributes the plugin dependency's implementation.
 - Use `implementation(apiOf(...))` when only `src/main` consumes the plugin dependency's API and its implementation is supplied independently.
 
+## Unit tests
+
+- Give each Project plugin at least one unit test that creates a project with the [ProjectBuilder helpers](../../using-convention-plugins/references/gradle-plugin-modules.md#gradle-unit-tests-and-dependency-helpers), applies the plugin by ID, configures the extension's required properties when the plugin registers a top-level extension, and evaluates the project. Evaluation runs `afterEvaluate` callbacks, so it catches configuration failures that plugin application alone misses.
+- Cover Settings and init plugin application in the [functional matrix](testing.md#functional-matrix); the ProjectBuilder helpers create only projects.
+
+```kotlin
+import io.technoirlab.example.api.ExampleExtension
+import io.technoirlab.gradle.test.kit.createRootProject
+import io.technoirlab.gradle.test.kit.evaluate
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.configure
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+
+class ExamplePluginTest {
+    private lateinit var project: Project
+
+    @BeforeEach
+    fun setUp() {
+        project = createRootProject("example-fixture")
+    }
+
+    @Test
+    fun `applies to a project successfully`() {
+        project.apply(plugin = "io.technoirlab.example")
+        project.configure<ExampleExtension> {
+            packageName.set("com.example.generated")
+        }
+
+        project.evaluate()
+    }
+}
+```
+
 ## Functional tests
 
 - Use AssertJ for assertions instead of vanilla JUnit assertions.
@@ -93,6 +128,8 @@ Apply these additional rules to organisation build conventions:
 - [Gradle plugin extension defaults](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/internal/GradlePluginExtensionImpl.kt)
 - [Project coordinate defaults](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/ProjectSettingsImpl.kt)
 - [Project group and version assignment](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/Common.kt)
+- [ProjectBuilder helpers](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/ProjectBuilder.kt)
+- [Gradle plugin convention unit test](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/test/kotlin/io/technoirlab/conventions/gradle/plugin/GradlePluginConventionPluginTest.kt)
 - [Shared TestKit runner extension](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/GradleRunnerExtension.kt)
 - [Shared TestKit configuration](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/GradleConfig.kt)
 - [Shared TestKit project helpers](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/GradleProject.kt)
@@ -115,5 +152,6 @@ Apply these additional rules to organisation build conventions:
 - [CMake import plugin API](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/cmake-import-gradle-plugin/src/api/kotlin/io/technoirlab/cmake/import/api/CMakeImportExtension.kt)
 - [CMake import plugin implementation](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/cmake-import-gradle-plugin/src/main/kotlin/io/technoirlab/cmake/import/CMakeImportPlugin.kt)
 - [CMake public task API](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/cmake-import-gradle-plugin/src/main/kotlin/io/technoirlab/cmake/import/tasks/CMakeBuildTask.kt)
+- [OpenAPI Kotlin generator plugin unit test](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/openapi-kotlin-generator-gradle-plugin/src/test/kotlin/io/technoirlab/openapi/kotlin/generator/OpenApiKotlinGeneratorPluginTest.kt)
 - [Device Run fixture plugin version management](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/device-run-gradle-plugin/src/functionalTest/resources/device-run-fixture/settings.gradle.kts)
 - [Device Run fixture version catalog](https://github.com/technoir-lab/kmp-gradle-plugins/blob/main/device-run-gradle-plugin/src/functionalTest/resources/device-run-fixture/gradle/libs.versions.toml)
