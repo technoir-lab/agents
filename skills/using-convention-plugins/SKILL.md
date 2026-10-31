@@ -9,7 +9,7 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 
 - Do not apply `io.technoirlab.conventions.common` directly; it is an internal implementation plugin.
 - Use the convention's public DSL and supplied tasks for functionality it owns.
-- Written against convention plugins `v60`.
+- Written against convention plugins `v61`.
 - Match guidance to the project's convention-plugin version; consult implementation and public APIs when README examples disagree.
 
 ## Workflow
@@ -38,7 +38,7 @@ description: Apply Technoir Lab conventions when creating, editing, or reviewing
 | Need | Read |
 |---|---|
 | Library choices by category and project scope | [Tech stack](references/tech-stack.md) |
-| Plugin selection, DSL names, settings, coordinates, JVM execution | [Project setup](references/project-setup.md) |
+| Plugin selection, DSL names, settings, coordinates, remote build cache, JVM execution | [Project setup](references/project-setup.md) |
 | Direct dependencies, API exposure, version catalogs, serialization | [Dependencies and serialization](references/dependencies-and-serialization.md) |
 | ABI validation, BuildConfig, redaction, optional feature defaults | [Build features](references/build-features.md) |
 | Compiler diagnostics, JUnit, KMP tests, fixtures, lint, coverage, dependency analysis | [Testing and quality](references/testing-and-quality.md) |

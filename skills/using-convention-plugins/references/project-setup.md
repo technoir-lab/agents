@@ -55,6 +55,7 @@
 - Declare all Gradle plugin versions managed by the project in the `pluginManagement.plugins` block of `settings.gradle.kts`; apply plugins without versions in settings and project `plugins` blocks. Do not declare plugin versions in version catalogs or root/module build scripts; reuse convention-supplied plugin versions without adding duplicate declarations.
 - Declare one `conventionPluginsVersion` variable in `pluginManagement.plugins` and use it for every convention plugin version declaration.
 - List every public convention plugin used by the build in the top-level `plugins` block of `settings.gradle.kts` so they are loaded once in the settings classloader. Use `apply false` for project convention plugins and apply the settings convention there.
+- Keep `gradlePluginPortal()` in `pluginManagement.repositories`; the settings convention depends on the GCP build cache plugin, which is published only to the Gradle Plugin Portal.
 - [Android] Add `google()` to `pluginManagement.repositories` so the Android convention's AGP dependencies can resolve; the settings convention's dependency repositories do not configure plugin resolution.
 
 Minimal `settings.gradle.kts` for initial setup before any modules exist; use the root folder name in place of `example`:
@@ -98,6 +99,35 @@ globalSettings {
 - Use fixed dependency versions where versions are required; the settings convention rejects dynamic and changing versions.
 - Set `globalSettings.develocityUrl` when build scans should use a Develocity server; scan publishing is enabled only when this property is present.
 
+## Remote build cache
+
+- The settings convention configures the remote build cache, in Google Cloud Storage, only from environment variables; do not declare `buildCache` blocks in `settings.gradle.kts`.
+
+| Variable | Purpose |
+|---|---|
+| `GCP_BUILD_CACHE_PROJECT_ID` | Google Cloud project that owns the cache bucket |
+| `GCP_BUILD_CACHE_BUCKET_NAME` | Bucket that stores cache entries |
+| `GCP_BUILD_CACHE_CREDENTIALS` | Path to a Google credentials file |
+| `GCP_BUILD_CACHE_PUSH` | `true` to store entries in the remote cache |
+
+- Builds use the remote cache only when the project, bucket, and credentials variables are all set. Builds that push to it do not use the local build cache.
+- Keep `org.gradle.caching=true` from the [initial Gradle properties](#initial-gradle-properties); without it, Gradle uses neither the local nor the remote cache.
+- Leave the variables unset for local builds; they need no Google Cloud access.
+- In GitHub Actions workflows, add the `setup-gcp-gradle-build-cache` action to every job that runs Gradle, after checkout and before the first Gradle step, and grant the job `id-token: write`. The action sets all four variables in `technoir-lab` repositories and skips authentication elsewhere.
+
+```yaml
+permissions:
+  contents: read
+  id-token: write
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v7.0.1
+
+  - name: Set up GCP Gradle build cache
+    uses: technoir-lab/actions/setup-gcp-gradle-build-cache@v1.2.1
+```
+
 ## Initial Git ignores
 
 - Use this baseline from the Technoir Lab project examples; add missing entries to an existing `.gitignore`.
@@ -139,6 +169,12 @@ kotlin.daemon.jvmargs=-Xmx1g -XX:+UseParallelGC
 - [Convention plugins Git ignore example](https://github.com/technoir-lab/convention-plugins/blob/main/.gitignore)
 - [Vulkan Kotlin Git ignore example](https://github.com/technoir-lab/vulkan-kotlin/blob/main/.gitignore)
 - [Gradle: Generating daemon JVM criteria](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_jvm_criteria)
+- [Gradle: Build Cache](https://docs.gradle.org/current/userguide/build_cache.html)
+- [Gradle Plugin Portal: GCP build cache plugin](https://plugins.gradle.org/plugin/androidx.build.gradle.gcpbuildcache)
+- [GCP Gradle build cache plugin](https://github.com/androidx/gcp-gradle-build-cache/blob/main/gcpbuildcache/README.md)
+- [Settings convention remote build cache](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/settings-conventions/README.md#remote-build-cache)
+- [Remote build cache configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/settings-conventions/src/main/kotlin/io/technoirlab/conventions/settings/configuration/BuildCache.kt)
+- [setup-gcp-gradle-build-cache action](https://github.com/technoir-lab/actions/blob/main/setup-gcp-gradle-build-cache/README.md)
 - [Gradle: Plugin version management](https://docs.gradle.org/current/userguide/plugins_intermediate.html#sec:plugin_version_management)
 - [Gradle: Plugin repositories](https://docs.gradle.org/current/userguide/plugins_intermediate.html#sec:plugin_repositories)
 - [Gradle: Centralizing repository declarations](https://docs.gradle.org/current/userguide/centralizing_repositories.html)

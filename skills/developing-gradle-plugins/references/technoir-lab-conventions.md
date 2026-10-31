@@ -56,6 +56,7 @@ dependencies {
 - Register `GradleRunnerExtension(<fixture-name>)` with `@RegisterExtension`; mutate the copied fixture through `GradleProject` helpers.
 - Functional-test Kotlin can access `internal` declarations from `main`; the module convention wires the main compilation as a friend path.
 - Use the harness defaults: Configuration Cache, configure-on-demand, Isolated Projects, `--stacktrace`, and no build cache. Disable a feature only for a test that cannot support it.
+- Set `GradleConfig.environmentVariables` in tests that enable the build cache. A non-empty map replaces the fixture build's environment; otherwise fixture builds applying the settings convention inherit CI's `GCP_BUILD_CACHE_*` variables and use the shared remote cache.
 - Reuse the module convention's `publishToMavenLocal` and test-property wiring to satisfy the [functional-test publication contract](testing.md#functional-test-publication-contract).
 - Use `functionalTestPublishOnly` for a project artifact needed by fixture builds but not by the functional-test classpath.
 - Let the generated init script supply repositories.
@@ -97,6 +98,8 @@ Apply these additional rules to organisation build conventions:
 - [Shared TestKit project helpers](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/GradleProject.kt)
 - [TestKit init-script generator](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/kotlin/io/technoirlab/gradle/test/kit/InitScriptGenerator.kt)
 - [TestKit init-script template](https://github.com/technoir-lab/convention-plugins/blob/main/libraries/gradle-test-kit/src/main/resources/gradle-test-kit.init.gradle.kts)
+- [Tooling API: Operation environment variables](https://docs.gradle.org/current/javadoc/org/gradle/tooling/LongRunningOperation.html#setEnvironmentVariables(java.util.Map))
+- [Settings convention remote build cache](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/settings-conventions/README.md#remote-build-cache)
 
 ## References
 
