@@ -1,0 +1,4 @@
+interface:
+  display_name: "Imaging Edge Desktop"
+  short_description: "Shoot, develop and export with Sony Imaging Edge"
+  default_prompt: "Use $imaging-edge-desktop to take a photo with the tethered camera and export it as JPEG."

@@ -41,5 +41,6 @@
 
 - Use descriptive branch names without AI harness prefixes (such as `codex/`, `claude/`, `cursor/`, or `junie/`).
 - Keep commits focused and use short, imperative commit subjects.
+- Prefix the subject of a commit that changes a skill with the skill name in brackets: `[<skill>] Update references`.
 - Do not add a `Co-Authored-By` trailer.
 - PR descriptions should explain the problem, the changes made, and the resulting behavior. Include compatibility impacts, remaining limitations, and links to related issues when relevant. Do not include checks performed, validation commands, or validation results.

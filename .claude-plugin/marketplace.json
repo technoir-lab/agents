@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "technoir-lab",
-  "description": "Technoir Lab's agent skills for Gradle and Kotlin development.",
+  "description": "Technoir Lab's agent skills.",
   "owner": {
     "name": "Technoir Lab",
     "url": "https://github.com/technoir-lab"
@@ -10,7 +10,7 @@
     {
       "name": "technoir-lab-agents",
       "source": ".",
-      "description": "Agent skills for Technoir Lab projects: Gradle plugin development, custom KtLint rules, Kotlin coding conventions, convention plugin usage, and convention plugin version bumps.",
+      "description": "Agent skills for Technoir Lab projects.",
       "author": {
         "name": "Technoir Lab",
         "url": "https://github.com/technoir-lab"

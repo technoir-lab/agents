@@ -9,5 +9,6 @@ Skills
 - [bump-convention-plugins-version](skills/bump-convention-plugins-version/SKILL.md)
 - [developing-gradle-plugins](skills/developing-gradle-plugins/SKILL.md)
 - [developing-ktlint-rules](skills/developing-ktlint-rules/SKILL.md)
+- [imaging-edge-desktop](skills/imaging-edge-desktop/SKILL.md)
 - [kotlin-coding-conventions](skills/kotlin-coding-conventions/SKILL.md)
 - [using-convention-plugins](skills/using-convention-plugins/SKILL.md)
