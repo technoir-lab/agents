@@ -6,7 +6,7 @@
 
 - Apply these rules to modules using `io.technoirlab.conventions.gradle-plugin`.
 - Set `gradlePluginConfig.packageName` explicitly for the plugin's package.
-- Set `gradlePluginConfig.minGradleVersion` to the minimum Gradle version actually supported; the default is `9.6`, and supported values start at `9.0`.
+- Set `gradlePluginConfig.minGradleVersion` to the minimum Gradle version actually supported; the default and lowest supported value is `9.6`.
 - Let the convention derive Kotlin compatibility from that minimum, even when building on a newer Gradle version; follow the [Kotlin compatibility rules](#gradle-kotlin-compatibility).
 - Put the plugin's public DSL and API types in `src/api/kotlin`; put implementation in `src/main/kotlin`.
 - Declare API-source-set dependencies in `apiApi`, `apiImplementation`, or `apiCompileOnly`, according to their use.
