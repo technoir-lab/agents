@@ -98,7 +98,7 @@
 | [Android] [JVM] [Gradle] Coroutine tests that need virtual time or test dispatchers | kotlinx.coroutines test utilities: `runTest` and virtual-time scheduling | `org.jetbrains.kotlinx:kotlinx-coroutines-test` | Convention-supplied coroutines BOM |
 
 - [KMP] Use `kotlin.test` test annotations in both common and target-specific test source sets; do not introduce direct JUnit dependencies or imports for KMP JVM tests.
-- [Android] [JVM] [Gradle] Write other tests of suspending functions as JUnit `suspend` test methods, as in the [test style rules](../../kotlin-coding-conventions/references/tests.md#android-jvm-gradle-use-assertj-core-assertions); JUnit runs them with `runBlocking` and requires `kotlinx-coroutines-core` on the test runtime classpath.
+- [Android] [JVM] [Gradle] Write other tests of suspending functions as JUnit `suspend` test methods, as in the [test style rules](../../kotlin-coding-conventions/references/tests.md#android-jvm-gradle-use-assertj-core-assertions); JUnit runs them with `runBlocking`, using the `kotlin-reflect` and `kotlinx-coroutines-core` runtime dependencies that the conventions supply to [JVM and Gradle plugin suites](testing-and-quality.md#jvm-regular-jvm-and-gradle-plugin-tests) and [Android local unit tests](testing-and-quality.md#android-local-unit-tests). These are runtime-only: test code that calls kotlinx.coroutines APIs still needs `kotlinx-coroutines-core` on its compile classpath.
 - Follow [test setup and fixture rules](testing-and-quality.md) for dependency and source-set wiring.
 - Declare `kotlinx-coroutines-test` in test source sets only.
 

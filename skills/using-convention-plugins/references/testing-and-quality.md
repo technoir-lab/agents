@@ -12,6 +12,7 @@
 ## [JVM] Regular JVM and Gradle plugin tests
 
 - In JVM application/library and Gradle plugin modules, reuse the convention-provided JUnit Jupiter dependency and suite setup; do not add a duplicate JUnit version or engine configuration.
+- Every suite the conventions configure, including `functionalTest`, has `kotlin-reflect` and `kotlinx-coroutines-core` on its runtime classpath, which JUnit needs to run `suspend` test methods; do not redeclare them as runtime-only dependencies.
 
 ## [KMP] Tests on all targets
 
@@ -20,6 +21,7 @@
 ## [Android] Local unit tests
 
 - Reuse the supplied JUnit Jupiter dependency, JUnit Platform launcher, and unit-test task configuration; do not add duplicate framework versions.
+- Local unit tests have `kotlin-reflect` and `kotlinx-coroutines-core` on their runtime classpath, which JUnit needs to run `suspend` test methods; do not redeclare them as `testRuntimeOnly`.
 - Use the supplied [Kover tasks](#jvm-coverage) for local unit-test coverage.
 - Configure instrumented tests separately when required; the Android conventions do not configure their execution.
 
@@ -92,6 +94,7 @@ kover {
 - [Gradle plugin conventions: Code coverage](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/README.md#code-coverage)
 - [Gradle plugin API variant and functional test coverage configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/configuration/Plugin.kt)
 - [JUnit 6 user guide: Overview](https://docs.junit.org/6.1.3/overview.html)
+- [JUnit 6 user guide: Kotlin coroutines](https://docs.junit.org/6.1.3/writing-tests/test-classes-and-methods.html#kotlin-coroutines)
 - [Convention dependency versions](https://github.com/technoir-lab/convention-plugins/blob/main/gradle/libs.versions.toml)
 - [JUnit suite configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/TestSuites.kt)
 - [Test fixtures configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/TestFixtures.kt)
