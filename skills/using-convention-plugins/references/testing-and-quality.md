@@ -63,7 +63,22 @@
 - Use full task paths to scope execution; these tasks schedule the tests needed to collect coverage.
 - Reuse existing reports when the relevant code and tests have not changed.
 - Kover measures JVM test execution, including KMP common code exercised by JVM tests; it does not measure non-JVM test coverage.
-- Conventions disable instrumentation for `functionalTest` and exclude declarations annotated with `javax.annotation.processing.Generated` from reports.
+- In JVM modules and the JVM target of KMP modules, reports and verification rules measure only shipped code: the `main` compilation, plus the `api` source set in [Gradle plugin modules](gradle-plugin-modules.md#gradle-public-api-and-compatibility). Test fixtures, benchmarks, functional tests, and other source sets are not measured; their test tasks still contribute to the coverage of measured code.
+- Android modules measure the code of each build variant, which already excludes test fixtures.
+- To measure another source set that the module ships, add it to `includedSourceSets`. Kover matches these names against Kotlin compilations, so in KMP modules name a compilation of the JVM target:
+
+```kotlin
+kover {
+    currentProject {
+        sources {
+            includedSourceSets.add("extra")
+        }
+    }
+}
+```
+
+- Gradle plugin conventions disable instrumentation for `functionalTest`, so coverage tasks do not run functional tests.
+- Reports exclude declarations annotated with `javax.annotation.processing.Generated`.
 - When aggregate coverage is requested or required by an existing repository workflow, add `kover(project(":module"))` dependencies at the root for the selected modules; applying the root convention alone does not select child projects for aggregation.
 - For root coverage reports and verification, replace `:module:` with `:` in the commands above; coverage includes the selected module dependencies.
 
@@ -72,6 +87,10 @@
 - [Root plugin implementation](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/root-conventions/src/main/kotlin/io/technoirlab/conventions/root/RootConventionPlugin.kt)
 - [Root coverage aggregation examples](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/root-conventions/src/functionalTest/kotlin/io/technoirlab/conventions/root/RootConventionPluginFunctionalTest.kt)
 - [Kover: Report tasks, verification, and project coverage](https://kotlin.github.io/kotlinx-kover/gradle-plugin/)
+- [Kover: Exclusion of JVM source sets](https://kotlin.github.io/kotlinx-kover/gradle-plugin/#exclusion-of-jvm-source-sets)
+- [Common conventions: Code coverage](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/README.md#code-coverage)
+- [Gradle plugin conventions: Code coverage](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/README.md#code-coverage)
+- [Gradle plugin API variant and functional test coverage configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/gradle-plugin-conventions/src/main/kotlin/io/technoirlab/conventions/gradle/plugin/configuration/Plugin.kt)
 - [JUnit 6 user guide: Overview](https://docs.junit.org/6.1.3/overview.html)
 - [Convention dependency versions](https://github.com/technoir-lab/convention-plugins/blob/main/gradle/libs.versions.toml)
 - [JUnit suite configuration](https://github.com/technoir-lab/convention-plugins/blob/main/conventions/common-conventions/src/main/kotlin/io/technoirlab/conventions/common/configuration/TestSuites.kt)
